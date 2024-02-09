@@ -6,12 +6,10 @@ import { MAXIMUM_NUMBER, PICK_AMOUNT } from "../../config";
 export const runtime = "edge";
 
 // Image metadata
-export const size = {
+const size = {
   width: 1200,
   height: 630,
 };
-
-export const contentType = "image/png";
 
 // Image generation
 export async function GET(req: NextRequest) {

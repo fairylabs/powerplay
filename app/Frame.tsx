@@ -33,9 +33,7 @@ function sanitizePicks(raw: string) {
     .map((n) => parseInt(n.trim().replace(/\D/g, "")))
     .filter(Boolean);
 
-  return new Set(
-    splitNumbers.sort((a, b) => (a > b ? 1 : -1)),
-  );
+  return new Set(splitNumbers.sort((a, b) => (a > b ? 1 : -1)));
 }
 
 function validatePicks(picks: Set<number>) {
@@ -81,7 +79,9 @@ const reducer: FrameReducer<State> = (state, action: PreviousFrame<State>) => {
     }
 
     if (action.postBody?.untrustedData.buttonIndex === 1) {
-      const numbers = sanitizePicks(action.postBody.untrustedData.inputText);
+      const numbers = sanitizePicks(
+        action.postBody.untrustedData.inputText ?? "",
+      );
       const valid = validatePicks(numbers);
 
       return {
