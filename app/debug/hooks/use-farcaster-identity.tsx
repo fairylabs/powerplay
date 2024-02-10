@@ -20,16 +20,25 @@ interface SignedKeyRequest {
 export function useFarcasterIdentity() {
   const [loading, setLoading] = useState(false);
   const [farcasterUser, setFarcasterUser] = useState<FarcasterUser | null>(
-    getSignerFromLocalStorage(),
+    getSignerFromLocalStorage()
   );
 
   function getSignerFromLocalStorage() {
     if (typeof window !== "undefined") {
       const storedData = localStorage.getItem(
-        LOCAL_STORAGE_KEYS.FARCASTER_USER,
+        LOCAL_STORAGE_KEYS.FARCASTER_USER
       );
       if (storedData) {
         const user: FarcasterUser = JSON.parse(storedData);
+
+        if (user.status === "pending_approval") {
+          // Validate that deadline hasn't passed
+          if (user.deadline < Math.floor(Date.now() / 1000)) {
+            localStorage.removeItem(LOCAL_STORAGE_KEYS.FARCASTER_USER);
+            return null;
+          }
+        }
+
         return user;
       }
       return null;
@@ -62,7 +71,7 @@ export function useFarcasterIdentity() {
                 headers: {
                   "Content-Type": "application/json",
                 },
-              },
+              }
             );
             const responseBody = (await fcSignerRequestResponse.json()) as {
               result: { signedKeyRequest: SignedKeyRequest };
@@ -80,7 +89,7 @@ export function useFarcasterIdentity() {
             // store the user in local storage
             localStorage.setItem(
               LOCAL_STORAGE_KEYS.FARCASTER_USER,
-              JSON.stringify(user),
+              JSON.stringify(user)
             );
 
             setFarcasterUser(user);
@@ -112,7 +121,7 @@ export function useFarcasterIdentity() {
       return () => {
         document.removeEventListener(
           "visibilitychange",
-          handleVisibilityChange,
+          handleVisibilityChange
         );
         clearInterval(intervalId);
       };
@@ -123,6 +132,24 @@ export function useFarcasterIdentity() {
     setLoading(true);
     await createAndStoreSigner();
     setLoading(false);
+  }
+
+  async function impersonateUser({ fid }: { fid: number }) {
+    const keypair = await createKeypair();
+    const { privateKey, publicKey } = convertKeypairToHex(keypair);
+    const user: FarcasterUser = {
+      status: "impersonating",
+      fid,
+      privateKey,
+      publicKey,
+    };
+
+    localStorage.setItem(
+      LOCAL_STORAGE_KEYS.FARCASTER_USER,
+      JSON.stringify(user)
+    );
+
+    setFarcasterUser(user);
   }
 
   async function createAndStoreSigner() {
@@ -173,7 +200,7 @@ export function useFarcasterIdentity() {
         };
         localStorage.setItem(
           LOCAL_STORAGE_KEYS.FARCASTER_USER,
-          JSON.stringify(user),
+          JSON.stringify(user)
         );
         setFarcasterUser(user);
       }
@@ -182,5 +209,11 @@ export function useFarcasterIdentity() {
     }
   }
 
-  return { farcasterUser, loading, startFarcasterSignerProcess, logout };
+  return {
+    farcasterUser,
+    loading,
+    startFarcasterSignerProcess,
+    logout,
+    impersonateUser,
+  };
 }

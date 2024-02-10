@@ -6,7 +6,7 @@ if (
   !process.env.FARCASTER_DEVELOPER_FID
 ) {
   console.warn(
-    "define the FARCASTER_DEVELOPER_MNEMONIC and FARCASTER_DEVELOPER_FID environment variables",
+    "define the FARCASTER_DEVELOPER_MNEMONIC and FARCASTER_DEVELOPER_FID environment variables"
   );
 }
 
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     const appFid = process.env.FARCASTER_DEVELOPER_FID!;
     const account = mnemonicToAccount(
-      process.env.FARCASTER_DEVELOPER_MNEMONIC!,
+      process.env.FARCASTER_DEVELOPER_MNEMONIC!
     );
 
     const deadline = Math.floor(Date.now() / 1000) + 86400; // signature is valid for 1 day

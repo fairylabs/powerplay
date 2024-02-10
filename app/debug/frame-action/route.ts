@@ -5,10 +5,10 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const isPostRedirect =
     req.nextUrl.searchParams.get("postType") === "post_redirect";
+  const postUrl = req.nextUrl.searchParams.get("postUrl")!;
 
   try {
-    const url = body.untrustedData.url;
-    const r = await fetch(url, {
+    const r = await fetch(postUrl, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -23,19 +23,18 @@ export async function POST(req: NextRequest) {
         {
           location: r.headers.get("location"),
         },
-        { status: 302 },
+        { status: 302 }
       );
     }
 
     const htmlString = await r.text();
 
-    const frame = getFrame({ htmlString, url });
+    const { frame, errors } = getFrame({
+      htmlString,
+      url: body.untrustedData.url,
+    });
 
-    if (!frame) {
-      return new Response("Invalid frame", { status: 400 });
-    }
-
-    return Response.json(frame);
+    return Response.json({ frame, errors });
   } catch (err) {
     console.error(err);
     return Response.error();
