@@ -1,0 +1,44 @@
+#container {
+  margin: 0;
+  background-color: #2151f5;
+  min-height: 100dvh;
+  display: flex;
+}
+
+#gm {
+  position: relative;
+  margin: auto;
+  color: white;
+  text-transform: uppercase;
+  text-align: center;
+  font-family: monospace;
+  font-size: 5em;
+  z-index: 1;
+}
+
+#meme {
+  display: block;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 66%);
+  width: 400px;
+  height: 600px;
+  transition: transform 600ms ease;
+  z-index: 0;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+#meme:hover {
+  transform: translate(-50%, 38%);
+}
+
+#brian {
+  top: 0;
+  left: 50%;
+  position: absolute;
+  object-fit: contain;
+  transform: translate(-50%, 0);
+  max-width: 1000px;
+}

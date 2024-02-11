@@ -31,6 +31,8 @@ import { baseSepolia } from "viem/chains";
 
 const IS_DEBUG = process.env.ENABLE_DEBUG === "true";
 
+export const HOST = process.env.NEXT_PUBLIC_HOST;
+
 const neynar = new NeynarAPI();
 
 export enum Stage {
@@ -176,6 +178,7 @@ export async function Frame({
   const frameImageOptions: SatoriOptions = {
     width: 1200,
     height: 630,
+    debug: false,
     fonts: [
       {
         name: "Comic Helvetic",
@@ -323,20 +326,23 @@ export async function Frame({
           pathname="/"
         >
           <FrameImage options={frameImageOptions}>
-            <div tw="w-full h-full bg-[#2151f5] text-white flex flex-col items-center justify-center font-mono text-7xl leading-[2] text-center">
-              <span>You&apos;ve picked</span>
-              <div tw="flex text-8xl my-10">
+            <div tw="w-full h-full bg-white text-[#2151f5] flex flex-col items-center justify-center font-mono text-7xl leading-[2] text-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`${HOST}/frames/numbers.png`}
+                alt=""
+                tw="absolute top-0 left-0 w-full"
+              />
+              <div tw="absolute w-full bottom-24 flex text-8xl left-5">
                 {state.numbers?.map((num) => (
                   <div
-                    tw="flex flex-shrink-0 0 items-center justify-center w-40 h-40 border-white border-4 rounded-full mx-5 pt-4"
+                    tw="flex flex-shrink-0 0 items-center justify-center w-[160px] h-[165px] rounded-full mx-[35px] pt-5 text-center"
                     key={num}
                   >
                     {num}
                   </div>
                 ))}
               </div>
-              <span>Claim your ticket</span>
-              <span>or try again</span>
             </div>
           </FrameImage>
           <FrameButton>Claim ticket ✅</FrameButton>
@@ -352,7 +358,7 @@ export async function Frame({
         previousFrame={previousFrame}
         pathname="/"
       >
-        <FrameImage src="/frames/initial.png" />
+        <FrameImage src="/frames/initial.gif" />
         <FrameButton>🔵 🎰 🌟 Claim free ticket 🌟 🎰 🔵</FrameButton>
       </FrameContainer>
     );

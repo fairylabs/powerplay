@@ -1,4 +1,5 @@
 import { Frame } from "./Frame";
+import { Powerbald } from "./Powerbald";
 
 export default async function Home({
   searchParams,
@@ -7,7 +8,7 @@ export default async function Home({
 }) {
   return (
     <div>
-      Powerbald.
+      <Powerbald />
       <Frame searchParams={searchParams} />
     </div>
   );

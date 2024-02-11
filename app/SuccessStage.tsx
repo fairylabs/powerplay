@@ -9,7 +9,7 @@ import {
 import type { SatoriOptions } from "satori";
 import { TransactionExecutionError, getAddress, type Address } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { Stage, State, getStorageKey, type MintData } from "./Frame";
+import { Stage, State, getStorageKey, type MintData, HOST } from "./Frame";
 import { LOOTERY_ABI } from "./abi/Lootery";
 import {
   CHAIN,
@@ -69,15 +69,16 @@ export async function SuccessStage({
       pathname="/"
     >
       <FrameImage options={frameImageOptions}>
-        <div tw="w-full h-full bg-[#2151f5] text-white flex flex-col items-center justify-center text-7xl">
-          <div tw="mb-10">Congratulations!</div>
-          <div tw="mb-10">You&apos;ve claimed today&apos;s ticket</div>
-          <div tw="flex text-8xl mb-10">
+        <div tw="w-full h-full bg-white text-[#2151f5] flex flex-col items-center justify-center text-7xl">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`${HOST}/frames/success.png`}
+            alt=""
+            tw="absolute top-0 left-0 w-full"
+          />
+          <div tw="absolute right-10 bottom-[300px] flex text-6xl ">
             {(state.numbers ?? finalUserData?.numbers ?? []).map((num) => (
-              <div
-                tw="flex flex-shrink-0 0 items-center justify-center w-40 h-40 border-white border-4 rounded-full mx-5 pt-4"
-                key={num}
-              >
+              <div tw="flex flex-shrink-0 items-center mx-2" key={num}>
                 {num}
               </div>
             ))}
