@@ -267,7 +267,7 @@ export async function Frame({
             previousFrame={previousFrame}
             pathname="/"
           >
-            <FrameImage src="/frames/follow.png" />
+            <FrameImage src={`${HOST}/frames/follow.png`} />
             <FrameButton action="post">Try again</FrameButton>
             <FrameButton action="link" target="https://warpcast.com/lottopgf">
               Follow @lottopgf
@@ -275,8 +275,6 @@ export async function Frame({
           </FrameContainer>
         );
       }
-
-      console.log(frameMessage?.requesterFid, isDegen, isActive);
 
       if (!isActive && !isDegen) {
         return (
@@ -286,7 +284,7 @@ export async function Frame({
             previousFrame={previousFrame}
             pathname="/"
           >
-            <FrameImage src="/frames/no-allowance.png" />
+            <FrameImage src={`${HOST}/frames/no-allowance.png`} />
             <FrameButton>Try again</FrameButton>
             <FrameButton
               action="link"
@@ -306,9 +304,9 @@ export async function Frame({
           pathname="/"
         >
           {state.stage === Stage.SELECTING_NUMBERS_INVALID ? (
-            <FrameImage src="/frames/numbers_invalid.png" />
+            <FrameImage src={`${HOST}/frames/numbers_invalid.png`} />
           ) : (
-            <FrameImage src="/frames/pick.png" />
+            <FrameImage src={`${HOST}/frames/pick.png`} />
           )}
           <FrameInput text="Type your numbers like 1 2 7 19 25" />
           <FrameButton>Submit your numbers 🍀</FrameButton>
@@ -358,7 +356,7 @@ export async function Frame({
         previousFrame={previousFrame}
         pathname="/"
       >
-        <FrameImage src="/frames/initial.gif" />
+        <FrameImage src={`${HOST}/frames/initial.gif`} />
         <FrameButton>🔵 🎰 🌟 Claim free ticket 🌟 🎰 🔵</FrameButton>
       </FrameContainer>
     );
@@ -371,7 +369,7 @@ export async function Frame({
         previousFrame={previousFrame}
         pathname="/"
       >
-        <FrameImage src="/frames/error.png" />
+        <FrameImage src={`${HOST}/frames/error.png`} />
         <FrameButton>Try again</FrameButton>
         <FrameButton
           action="link"
