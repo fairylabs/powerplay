@@ -58,7 +58,7 @@ const initialState: State = {
 };
 
 export function getStorageKey(gameId: number, fid: number) {
-  if (CHAIN.id === baseSepolia.id) {
+  if ((CHAIN.id as number) === baseSepolia.id) {
     return `powerbald-testnet:${gameId}:${fid}`;
   }
 
