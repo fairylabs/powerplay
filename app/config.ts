@@ -5,15 +5,15 @@ import {
   type Hex,
   type PublicClient,
 } from "viem";
-import { baseSepolia, hardhat } from "viem/chains";
+import { base } from "viem/chains";
 
 export const PICK_AMOUNT = 5;
 export const MAXIMUM_NUMBER = 25;
 
 export const LOTTO_ACCOUNT_FID = 233254;
 
-export const CONTRACT_ADDRESS = "0xa72F34926002759F7c87e94E37a3c1ac970C5ccF";
-export const CHAIN = baseSepolia;
+export const CONTRACT_ADDRESS = "0x0";
+export const CHAIN = base;
 
 export const MINTER_PRIVATE_KEY = process.env.MINTER_PRIVATE_KEY! as Hex;
 
