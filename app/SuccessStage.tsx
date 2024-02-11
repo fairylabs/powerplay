@@ -19,6 +19,8 @@ import {
   publicClient,
   walletClient,
 } from "./config";
+import { endOfDay, formatDistanceToNow } from "date-fns";
+import { UTCDate } from "@date-fns/utc";
 
 export async function SuccessStage({
   gameId,
@@ -61,6 +63,10 @@ export async function SuccessStage({
     }
   }
 
+  const countdown = formatDistanceToNow(endOfDay(new UTCDate()), {
+    addSuffix: true,
+  });
+
   return (
     <FrameContainer
       postUrl="/frames"
@@ -76,7 +82,10 @@ export async function SuccessStage({
             alt=""
             tw="absolute top-0 left-0 w-full"
           />
-          <div tw="absolute right-10 bottom-[300px] flex text-6xl ">
+          <div tw="absolute left-32 top-[260px] text-center flex text-[50px] leading-[1.5] w-[200px]">
+            {countdown}
+          </div>
+          <div tw="absolute right-14 top-[270px] flex text-6xl text-center justify-center">
             {(state.numbers ?? finalUserData?.numbers ?? []).map((num) => (
               <div tw="flex flex-shrink-0 items-center mx-2" key={num}>
                 {num}
