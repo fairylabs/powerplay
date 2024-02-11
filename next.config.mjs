@@ -12,6 +12,18 @@ const nextConfig = {
       },
     ],
   },
+  rewrites: async () => {
+    if (!process.env.ENABLE_DEBUG) {
+      return [
+        {
+          source: "/debug/:path*",
+          destination: "/",
+        },
+      ];
+    }
+
+    return [];
+  },
 };
 
 export default nextConfig;
