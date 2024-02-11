@@ -1,3 +1,4 @@
+import { kv } from "@vercel/kv";
 import {
   FrameButton,
   FrameContainer,
@@ -12,7 +13,9 @@ import {
 import { readFile } from "fs/promises";
 import path from "path";
 import type { SatoriOptions } from "satori";
+import type { Hex } from "viem";
 import { NeynarAPI } from "../api/neynar-api";
+import { SuccessStage } from "./SuccessStage";
 import { LOTTO_ACCOUNT_FID, MAXIMUM_NUMBER, PICK_AMOUNT } from "./config";
 import { DEBUG_HUB_OPTIONS } from "./debug/constants";
 import { getRandomPicks } from "./utils/random";
@@ -21,7 +24,7 @@ const IS_PRODUCTION = process.env.DISABLE_DEBUG !== "true";
 
 const neynar = new NeynarAPI();
 
-enum Stage {
+export enum Stage {
   INITIAL = "INITIAL",
   SELECTING_NUMBERS = "SELECTING_NUMBERS",
   SELECTING_NUMBERS_INVALID = "SELECTING_NUMBERS_INVALID",
@@ -29,14 +32,25 @@ enum Stage {
   SUCCESS = "SUCCESS",
 }
 
-type State = {
+export type State = {
   stage: Stage;
   numbers?: number[];
+};
+
+export type MintData = {
+  fid: number;
+  hash: Hex;
+  timestamp: string;
+  numbers: number[];
 };
 
 const initialState: State = {
   stage: Stage.INITIAL,
 };
+
+export function getStorageKey(gameId: number, fid: number) {
+  return `powerbald:${gameId}:${fid}`;
+}
 
 function sanitizePicks(raw: string) {
   const splitNumbers = raw
@@ -162,37 +176,26 @@ export async function Frame({
 
   const [state] = useFramesReducer<State>(reducer, initialState, previousFrame);
 
-  const hasClaimedTodaysTicket = false; // @TODO get from contract
-  const alreadyPickedNumbers = [1, 2, 3, 4, 5]; // @TODO get from contract
+  const gameId = 0;
+
+  const userData =
+    state.stage !== Stage.INITIAL && frameMessage?.requesterFid
+      ? await kv.hgetall<MintData>(
+          getStorageKey(gameId, frameMessage.requesterFid),
+        )
+      : null;
+  const hasClaimedTodaysTicket = !!userData;
 
   if (state.stage === Stage.SUCCESS || hasClaimedTodaysTicket) {
     return (
-      <FrameContainer
-        postUrl="/frames"
-        state={state}
+      <SuccessStage
+        gameId={gameId}
+        userData={userData}
+        frameImageOptions={frameImageOptions}
         previousFrame={previousFrame}
-        pathname="/"
-      >
-        <FrameImage options={frameImageOptions}>
-          <div tw="w-full h-full bg-[#2151f5] text-white flex flex-col items-center justify-center text-7xl">
-            <div tw="mb-10">Congratulations!</div>
-            <div tw="mb-10">You&apos;ve claimed today&apos;s ticket</div>
-            <div tw="flex text-8xl mb-10">
-              {(state.numbers ?? alreadyPickedNumbers).map((num) => (
-                <div
-                  tw="flex flex-shrink-0 0 items-center justify-center w-40 h-40 border-white border-4 rounded-full mx-5 pt-4"
-                  key={num}
-                >
-                  {num}
-                </div>
-              ))}
-            </div>
-          </div>
-        </FrameImage>
-        <FrameButton action="link" target="https://basescan.org">
-          TX
-        </FrameButton>
-      </FrameContainer>
+        state={state}
+        frameMessage={frameMessage}
+      />
     );
   }
 
