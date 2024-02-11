@@ -13,14 +13,23 @@ import {
 import { readFile } from "fs/promises";
 import path from "path";
 import type { SatoriOptions } from "satori";
-import type { Hex } from "viem";
+import { publicActions, type Hex } from "viem";
 import { NeynarAPI } from "../api/neynar-api";
 import { SuccessStage } from "./SuccessStage";
-import { LOTTO_ACCOUNT_FID, MAXIMUM_NUMBER, PICK_AMOUNT } from "./config";
+import {
+  CHAIN,
+  CONTRACT_ADDRESS,
+  LOTTO_ACCOUNT_FID,
+  MAXIMUM_NUMBER,
+  PICK_AMOUNT,
+  publicClient,
+} from "./config";
 import { DEBUG_HUB_OPTIONS } from "./debug/constants";
 import { getRandomPicks } from "./utils/random";
+import { LOOTERY_ABI } from "./abi/Lootery";
+import { baseSepolia } from "viem/chains";
 
-const IS_PRODUCTION = process.env.DISABLE_DEBUG !== "true";
+const IS_DEBUG = process.env.ENABLE_DEBUG === "true";
 
 const neynar = new NeynarAPI();
 
@@ -49,6 +58,10 @@ const initialState: State = {
 };
 
 export function getStorageKey(gameId: number, fid: number) {
+  if (CHAIN.id === baseSepolia.id) {
+    return `powerbald-testnet:${gameId}:${fid}`;
+  }
+
   return `powerbald:${gameId}:${fid}`;
 }
 
@@ -107,12 +120,21 @@ const reducer: FrameReducer<State> = (state, action: PreviousFrame<State>) => {
       );
       const valid = validatePicks(numbers);
 
+      console.log(valid);
+
+      if (!numbers.size) {
+        return {
+          ...state,
+          stage: Stage.SELECTING_NUMBERS,
+          numbers: undefined,
+        };
+      }
+
       return {
         ...state,
-        stage:
-          !numbers || valid
-            ? Stage.CONFIRMING_NUMBERS
-            : Stage.SELECTING_NUMBERS_INVALID,
+        stage: valid
+          ? Stage.CONFIRMING_NUMBERS
+          : Stage.SELECTING_NUMBERS_INVALID,
         numbers: Array.from(numbers),
       };
     }
@@ -167,7 +189,7 @@ export async function Frame({
   };
 
   const frameMessage = await getFrameMessage(previousFrame.postBody, {
-    ...(IS_PRODUCTION ? {} : DEBUG_HUB_OPTIONS),
+    ...(!IS_DEBUG ? {} : DEBUG_HUB_OPTIONS),
   });
 
   if (frameMessage && !frameMessage?.isValid) {
@@ -176,56 +198,103 @@ export async function Frame({
 
   const [state] = useFramesReducer<State>(reducer, initialState, previousFrame);
 
-  const gameId = 0;
+  try {
+    const rawGameId = await publicClient.readContract({
+      abi: LOOTERY_ABI,
+      address: CONTRACT_ADDRESS,
+      functionName: "currentGameId",
+    });
 
-  const userData =
-    state.stage !== Stage.INITIAL && frameMessage?.requesterFid
-      ? await kv.hgetall<MintData>(
-          getStorageKey(gameId, frameMessage.requesterFid),
-        )
-      : null;
-  const hasClaimedTodaysTicket = !!userData;
+    const gameId = Number(rawGameId);
 
-  if (state.stage === Stage.SUCCESS || hasClaimedTodaysTicket) {
-    return (
-      <SuccessStage
-        gameId={gameId}
-        userData={userData}
-        frameImageOptions={frameImageOptions}
-        previousFrame={previousFrame}
-        state={state}
-        frameMessage={frameMessage}
-      />
-    );
-  }
+    const userData =
+      state.stage !== Stage.INITIAL && frameMessage?.requesterFid
+        ? await kv.hgetall<MintData>(
+            getStorageKey(gameId, frameMessage.requesterFid),
+          )
+        : null;
+    const hasClaimedTodaysTicket = !!userData;
 
-  if (
-    state.stage === Stage.SELECTING_NUMBERS ||
-    state.stage === Stage.SELECTING_NUMBERS_INVALID
-  ) {
-    const [userDataResponse, isDegenResponse] = frameMessage?.requesterFid
-      ? await Promise.allSettled([
-          neynar.user
-            .userBulk(
-              frameMessage.requesterFid.toString(),
-              process.env.NEYNAR_API_KEY,
-              LOTTO_ACCOUNT_FID,
-            )
-            .then((f) => f.users.at(0) ?? null),
-          checkIsDegen(frameMessage.requesterFid),
-        ])
-      : [];
+    if (state.stage === Stage.SUCCESS || hasClaimedTodaysTicket) {
+      return (
+        <SuccessStage
+          gameId={gameId}
+          userData={userData}
+          frameImageOptions={frameImageOptions}
+          previousFrame={previousFrame}
+          state={state}
+          frameMessage={frameMessage}
+        />
+      );
+    }
 
-    const isFollowing =
-      userDataResponse?.status === "fulfilled" &&
-      userDataResponse.value?.viewer_context?.followed_by;
-    const isActive =
-      userDataResponse?.status === "fulfilled" &&
-      userDataResponse.value?.active_status === "active";
-    const isDegen =
-      isDegenResponse?.status === "fulfilled" && isDegenResponse.value;
+    if (
+      state.stage === Stage.SELECTING_NUMBERS ||
+      state.stage === Stage.SELECTING_NUMBERS_INVALID
+    ) {
+      const [userDataResponse, isDegenResponse] = frameMessage?.requesterFid
+        ? await Promise.allSettled([
+            neynar.user
+              .userBulk(
+                frameMessage.requesterFid.toString(),
+                process.env.NEYNAR_API_KEY,
+                LOTTO_ACCOUNT_FID,
+              )
+              .then((f) => f.users.at(0) ?? null),
+            checkIsDegen(frameMessage.requesterFid),
+          ])
+        : [];
 
-    if (!isFollowing) {
+      const isFollowing = IS_DEBUG
+        ? true
+        : userDataResponse?.status === "fulfilled" &&
+          userDataResponse.value?.viewer_context?.followed_by;
+      const hasLiked = IS_DEBUG ? true : frameMessage?.likedCast;
+      const isActive =
+        userDataResponse?.status === "fulfilled" &&
+        userDataResponse.value?.active_status === "active";
+      const isDegen =
+        isDegenResponse?.status === "fulfilled" && isDegenResponse.value;
+
+      if (!isFollowing || !hasLiked) {
+        return (
+          <FrameContainer
+            postUrl="/frames"
+            state={state}
+            previousFrame={previousFrame}
+            pathname="/"
+          >
+            <FrameImage src="/frames/follow.png" />
+            <FrameButton action="post">Try again</FrameButton>
+            <FrameButton action="link" target="https://warpcast.com/lottopgf">
+              Follow @lottopgf
+            </FrameButton>
+          </FrameContainer>
+        );
+      }
+
+      console.log(frameMessage?.requesterFid, isDegen, isActive);
+
+      if (!isActive && !isDegen) {
+        return (
+          <FrameContainer
+            postUrl="/frames"
+            state={state}
+            previousFrame={previousFrame}
+            pathname="/"
+          >
+            <FrameImage src="/frames/no-allowance.png" />
+            <FrameButton>Try again</FrameButton>
+            <FrameButton
+              action="link"
+              target="https://warpcast.com/~/channel/lotto"
+            >
+              Visit /lotto for news
+            </FrameButton>
+          </FrameContainer>
+        );
+      }
+
       return (
         <FrameContainer
           postUrl="/frames"
@@ -233,21 +302,19 @@ export async function Frame({
           previousFrame={previousFrame}
           pathname="/"
         >
-          <FrameImage options={frameImageOptions}>
-            <div tw="w-full h-full bg-[#2151f5] text-white flex flex-col items-center justify-center text-center text-7xl">
-              <div tw="text-7xl leading-[1.5]">
-                Follow @LottoPGF to claim your ticket!
-              </div>
-            </div>
-          </FrameImage>
-          <FrameButton action="link" target="https://warpcast.com/lottopgf">
-            Follow @LottoPGF
-          </FrameButton>
+          {state.stage === Stage.SELECTING_NUMBERS_INVALID ? (
+            <FrameImage src="/frames/numbers_invalid.png" />
+          ) : (
+            <FrameImage src="/frames/pick.png" />
+          )}
+          <FrameInput text="Type your numbers like 1 2 7 19 25" />
+          <FrameButton>Submit your numbers 🍀</FrameButton>
+          <FrameButton>Pick random 🔮</FrameButton>
         </FrameContainer>
       );
     }
 
-    if (!isActive && !isDegen) {
+    if (state.stage === Stage.CONFIRMING_NUMBERS) {
       return (
         <FrameContainer
           postUrl="/frames"
@@ -256,15 +323,24 @@ export async function Frame({
           pathname="/"
         >
           <FrameImage options={frameImageOptions}>
-            <div tw="w-full h-full bg-[#2151f5] text-white flex flex-col items-center justify-center text-center text-7xl p-10">
-              <div tw="mb-10">Can&apos;t claim today :(</div>
-              <div tw="text-7xl leading-[1.5]">
-                You need $DEGEN allowance or active status on Farcaster to claim
-                your ticket!
+            <div tw="w-full h-full bg-[#2151f5] text-white flex flex-col items-center justify-center font-mono text-7xl leading-[2] text-center">
+              <span>You&apos;ve picked</span>
+              <div tw="flex text-8xl my-10">
+                {state.numbers?.map((num) => (
+                  <div
+                    tw="flex flex-shrink-0 0 items-center justify-center w-40 h-40 border-white border-4 rounded-full mx-5 pt-4"
+                    key={num}
+                  >
+                    {num}
+                  </div>
+                ))}
               </div>
+              <span>Claim your ticket</span>
+              <span>or try again</span>
             </div>
           </FrameImage>
-          <FrameButton>Try again</FrameButton>
+          <FrameButton>Claim ticket ✅</FrameButton>
+          <FrameButton>Pick new numbers 🔄</FrameButton>
         </FrameContainer>
       );
     }
@@ -276,25 +352,12 @@ export async function Frame({
         previousFrame={previousFrame}
         pathname="/"
       >
-        <FrameImage options={frameImageOptions}>
-          <div tw="w-full h-full bg-[#2151f5] text-white flex flex-col items-center justify-center text-7xl leading-[1.5]">
-            <span>Hi {frameMessage?.requesterUserData?.displayName}!</span>
-            {state.stage === Stage.SELECTING_NUMBERS_INVALID ? (
-              <div tw="text-red-500 font-bold mb-5">Invalid!</div>
-            ) : null}
-            <span>Please pick {PICK_AMOUNT} unique numbers</span>
-            <span tw="flex">between 1 and {MAXIMUM_NUMBER}</span>
-          </div>
-        </FrameImage>
-
-        <FrameInput text="Type your numbers like 1 2 7 19 25" />
-        <FrameButton>Submit</FrameButton>
-        <FrameButton>Pick random numbers</FrameButton>
+        <FrameImage src="/frames/initial.png" />
+        <FrameButton>🔵 🎰 🌟 Claim free ticket 🌟 🎰 🔵</FrameButton>
       </FrameContainer>
     );
-  }
-
-  if (state.stage === Stage.CONFIRMING_NUMBERS) {
+  } catch (e) {
+    e instanceof Error && console.error(e.message);
     return (
       <FrameContainer
         postUrl="/frames"
@@ -302,44 +365,17 @@ export async function Frame({
         previousFrame={previousFrame}
         pathname="/"
       >
-        <FrameImage options={frameImageOptions}>
-          <div tw="w-full h-full bg-[#2151f5] text-white flex flex-col items-center justify-center font-mono text-7xl leading-[2] text-center">
-            <span>You&apos;ve picked</span>
-            <div tw="flex text-8xl my-10">
-              {state.numbers?.map((num) => (
-                <div
-                  tw="flex flex-shrink-0 0 items-center justify-center w-40 h-40 border-white border-4 rounded-full mx-5 pt-4"
-                  key={num}
-                >
-                  {num}
-                </div>
-              ))}
-            </div>
-            <span>Claim your ticket</span>
-            <span>or try again</span>
-          </div>
-        </FrameImage>
-        <FrameButton>Claim ticket</FrameButton>
-        <FrameButton>Pick new numbers</FrameButton>
+        <FrameImage src="/frames/error.png" />
+        <FrameButton>Try again</FrameButton>
+        <FrameButton
+          action="link"
+          target="https://warpcast.com/~/channel/lotto"
+        >
+          Visit /lotto for news
+        </FrameButton>
       </FrameContainer>
     );
   }
-
-  return (
-    <FrameContainer
-      postUrl="/frames"
-      state={state}
-      previousFrame={previousFrame}
-      pathname="/"
-    >
-      <FrameImage options={frameImageOptions}>
-        <div tw="w-full h-full bg-[#2151f5] text-white flex flex-col items-center justify-center font-mono text-9xl">
-          Powerbald 🎱
-        </div>
-      </FrameImage>
-      <FrameButton>Claim your free ticket</FrameButton>
-    </FrameContainer>
-  );
 }
 
 export interface AllowanceUser {
