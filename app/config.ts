@@ -12,8 +12,8 @@ export const MAXIMUM_NUMBER = 25;
 
 export const LOTTO_ACCOUNT_FID = 233254;
 
-export const CONTRACT_ADDRESS = "0xa72F34926002759F7c87e94E37a3c1ac970C5ccF";
-export const CHAIN = baseSepolia;
+export const CONTRACT_ADDRESS = "0xc94e65A6d6C145B6A0342dA9b5e8Dc3928505857";
+export const CHAIN = base;
 
 export const MINTER_PRIVATE_KEY = process.env.MINTER_PRIVATE_KEY! as Hex;
 
