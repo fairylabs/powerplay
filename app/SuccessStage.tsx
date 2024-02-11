@@ -1,4 +1,6 @@
+import { UTCDate } from "@date-fns/utc";
 import { kv } from "@vercel/kv";
+import { endOfDay, formatDistance } from "date-fns";
 import type { FrameActionDataParsedAndHubContext } from "frames.js";
 import {
   FrameButton,
@@ -9,7 +11,7 @@ import {
 import type { SatoriOptions } from "satori";
 import { TransactionExecutionError, getAddress, type Address } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { Stage, State, getStorageKey, type MintData, HOST } from "./Frame";
+import { HOST, Stage, State, getStorageKey, type MintData } from "./Frame";
 import { LOOTERY_ABI } from "./abi/Lootery";
 import {
   CHAIN,
@@ -19,8 +21,6 @@ import {
   publicClient,
   walletClient,
 } from "./config";
-import { endOfDay, formatDistanceToNow } from "date-fns";
-import { UTCDate } from "@date-fns/utc";
 
 export async function SuccessStage({
   gameId,
@@ -63,9 +63,7 @@ export async function SuccessStage({
     }
   }
 
-  const countdown = formatDistanceToNow(endOfDay(new UTCDate()), {
-    addSuffix: true,
-  });
+  const countdown = formatDistance(new UTCDate(), endOfDay(new UTCDate()));
 
   return (
     <FrameContainer
@@ -82,10 +80,10 @@ export async function SuccessStage({
             alt=""
             tw="absolute top-0 left-0 w-full"
           />
-          <div tw="absolute left-32 top-[260px] text-center flex text-[50px] leading-[1.5] w-[200px]">
+          <div tw="absolute left-[80px] w-[300px] top-[260px] text-center flex text-[50px] leading-[1.5] ">
             {countdown}
           </div>
-          <div tw="absolute right-14 top-[270px] flex text-6xl text-center justify-center">
+          <div tw="absolute right-[60px] w-[300px] top-[270px] flex text-6xl text-center justify-center">
             {(state.numbers ?? finalUserData?.numbers ?? []).map((num) => (
               <div tw="flex flex-shrink-0 items-center mx-2" key={num}>
                 {num}

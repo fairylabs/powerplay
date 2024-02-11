@@ -13,9 +13,11 @@ import {
 import { readFile } from "fs/promises";
 import path from "path";
 import type { SatoriOptions } from "satori";
-import { publicActions, type Hex } from "viem";
+import { type Hex } from "viem";
+import { baseSepolia } from "viem/chains";
 import { NeynarAPI } from "../api/neynar-api";
 import { SuccessStage } from "./SuccessStage";
+import { LOOTERY_ABI } from "./abi/Lootery";
 import {
   CHAIN,
   CONTRACT_ADDRESS,
@@ -26,8 +28,6 @@ import {
 } from "./config";
 import { DEBUG_HUB_OPTIONS } from "./debug/constants";
 import { getRandomPicks } from "./utils/random";
-import { LOOTERY_ABI } from "./abi/Lootery";
-import { baseSepolia } from "viem/chains";
 
 const IS_DEBUG = process.env.ENABLE_DEBUG === "true";
 
