@@ -202,11 +202,14 @@ export async function Frame({
   const [state] = useFramesReducer<State>(reducer, initialState, previousFrame);
 
   try {
-    const rawGameId = await publicClient.readContract({
-      abi: LOOTERY_ABI,
-      address: CONTRACT_ADDRESS,
-      functionName: "currentGameId",
-    });
+    const rawGameId =
+      state.stage === Stage.INITIAL
+        ? 0
+        : await publicClient.readContract({
+            abi: LOOTERY_ABI,
+            address: CONTRACT_ADDRESS,
+            functionName: "currentGameId",
+          });
 
     const gameId = Number(rawGameId);
 
