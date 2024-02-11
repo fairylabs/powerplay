@@ -4,21 +4,20 @@ import {
   FrameImage,
   FrameInput,
   FrameReducer,
+  getFrameMessage,
   getPreviousFrame,
   useFramesReducer,
   type PreviousFrame,
-  getFrameMessage,
 } from "frames.js/next/server";
-import { LOTTO_ACCOUNT_FID, MAXIMUM_NUMBER, PICK_AMOUNT } from "./config";
-import { getRandomPicks } from "./utils/random";
-import { DEBUG_HUB_OPTIONS } from "./debug/constants";
 import { readFile } from "fs/promises";
 import path from "path";
 import type { SatoriOptions } from "satori";
 import { NeynarAPI } from "../api/neynar-api";
-import type { Address } from "viem";
+import { LOTTO_ACCOUNT_FID, MAXIMUM_NUMBER, PICK_AMOUNT } from "./config";
+import { DEBUG_HUB_OPTIONS } from "./debug/constants";
+import { getRandomPicks } from "./utils/random";
 
-const IS_PRODUCTION = process.env.NODE_ENV === "production";
+const IS_PRODUCTION = process.env.DISABLE_DEBUG !== "true";
 
 const neynar = new NeynarAPI();
 
