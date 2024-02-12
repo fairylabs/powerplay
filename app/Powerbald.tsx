@@ -17,10 +17,13 @@ import { useQuery } from "@tanstack/react-query";
 import ConnectButton from "./ConnectButton";
 import Link from "next/link";
 
-import { useIsClient } from "usehooks-ts";
+import { useIsClient, useLocalStorage } from "usehooks-ts";
 import { Fragment } from "react";
 
 export function Powerbald() {
+  const [useFilter, setUseFilter] = useLocalStorage("filter", true, {
+    initializeWithValue: false,
+  });
   const { data: gameId } = useReadContract({
     abi: LOOTERY_ABI,
     address: CONTRACT_ADDRESS,
@@ -33,51 +36,55 @@ export function Powerbald() {
 
   return (
     <>
-      <svg width="0" height="0">
-        <filter id="chroma">
-          <feColorMatrix
-            type="matrix"
-            result="red_"
-            values="4 0 0 0 0
+      {useFilter && (
+        <svg width="0" height="0">
+          <filter id="chroma">
+            <feColorMatrix
+              type="matrix"
+              result="red_"
+              values="4 0 0 0 0
               0 0 0 0 0 
               0 0 0 0 0 
               0 0 0 1 0"
-          />
-          <feOffset in="red_" dy="0" result="red">
-            <animate
-              attributeName="dx"
-              //calcMode="discrete"
-              values="0;0;2;0;2;0;0.5;0;0;2;0"
-              dur="8s"
-              repeatCount="indefinite"
             />
-          </feOffset>
-          <feColorMatrix
-            type="matrix"
-            in="SourceGraphic"
-            result="blue_"
-            values="0 0 0 0 0
+            <feOffset in="red_" dy="0" result="red">
+              <animate
+                attributeName="dx"
+                //calcMode="discrete"
+                values="0;0;2;0;2;0;0.5;0;0;2;0"
+                dur="8s"
+                repeatCount="indefinite"
+              />
+            </feOffset>
+            <feColorMatrix
+              type="matrix"
+              in="SourceGraphic"
+              result="blue_"
+              values="0 0 0 0 0
               0 3 0 0 0 
               0 0 10 0 0 
               0 0 0 1 0"
-          />
-          <feOffset in="blue_" dx="-3" dy="0" result="blue">
-            <animate
-              attributeName="dx"
-              //calcMode="discrete"
-              values="0;0;-1;0;-1.5;0;-1;0;0;-2;0"
-              dur="8s"
-              repeatCount="indefinite"
             />
-          </feOffset>
-          <feBlend mode="screen" in="red" in2="blue" />
-        </filter>
-      </svg>
+            <feOffset in="blue_" dx="-3" dy="0" result="blue">
+              <animate
+                attributeName="dx"
+                //calcMode="discrete"
+                values="0;0;-1;0;-1.5;0;-1;0;0;-2;0"
+                dur="8s"
+                repeatCount="indefinite"
+              />
+            </feOffset>
+            <feBlend mode="screen" in="red" in2="blue" />
+          </filter>
+        </svg>
+      )}
 
       <div className="flex flex-col text-white bg-[#2151f5] font-mono pt-8">
-        <div className="opacity-40 absolute z-10">
-          <div className="lines pointer-events-none"></div>
-        </div>
+        {useFilter && (
+          <div className="opacity-40 absolute z-10">
+            <div className="lines pointer-events-none"></div>
+          </div>
+        )}
         <div style={{ filter: "url(#chroma)" }}>
           <div className="mx-auto font-black text-center space-y-10">
             <div className="bg-white py-4 px-8 mx-auto w-fit">
@@ -91,7 +98,7 @@ export function Powerbald() {
             </div>
 
             <Jackpot gameId={gameId} />
-            <p className="text-3xl">
+            <p className="text-base md:text-3xl">
               <Link
                 href="https://warpcast.com/lottopgf/0xa5237d47"
                 target="_blank"
@@ -102,6 +109,15 @@ export function Powerbald() {
               </Link>
             </p>
             <hr className="border-2 max-w-32 mx-auto" />
+            {isConnected ? (
+              <>
+                <div className="mx-auto border-4 w-full max-w-[460px] p-4 space-y-4">
+                  <p className="text-lg md:text-2xl">YOUR NUMBERS TODAY</p>
+                  <Tickets gameId={gameId} label="NONE YET" />
+                </div>
+                <hr className="border-2 max-w-32 mx-auto" />
+              </>
+            ) : null}
             <div>
               <p className="text-xl w-full max-w-[460px] pt-1 mx-auto bg-white text-blue-800 tracking-widest leading-none">
                 YESTERDAYS DRAWING
@@ -111,13 +127,13 @@ export function Powerbald() {
                 <hr className="border-2" />
                 {isConnected ? (
                   <>
-                    <p>YOUR PICKS</p>
+                    <p>YOUR NUMBERS</p>
                     <Tickets gameId={lastGameId} />
                     <ConnectButton />
                   </>
                 ) : (
                   <>
-                    <p>Connect to see your picks</p>
+                    <p className="uppercase">Connect to see your numbers</p>
                     <ConnectButton />
                   </>
                 )}
@@ -125,13 +141,20 @@ export function Powerbald() {
             </div>
           </div>
 
-          <div className="relative w-full h-[400px] overflow-hidden mt-[400px]">
+          <button
+            className="mx-auto my-8 block underline cursor-pointer hover:no-underline"
+            onClick={() => setUseFilter(!useFilter)}
+          >
+            TOGGLE ANIMATIONS
+          </button>
+
+          <div className="relative w-full h-[370px] overflow-hidden mt-[400px]">
             <Image
               src="/brian.webp"
               width={1000}
               height={1000}
               alt=""
-              className="object-contain absolute bottom-0 left-1/2 translate-y-[380px] -translate-x-1/2"
+              className="object-contain absolute top-0 left-1/2 -translate-x-1/2 max-w-none"
             />
           </div>
         </div>
@@ -152,7 +175,7 @@ function Jackpot({ gameId }: { gameId: bigint | undefined }) {
   });
 
   return (
-    <div className="tabular-nums  text-7xl">
+    <div className="tabular-nums text-2xl md:text-7xl">
       YOUR CHANCE TO WIN{" "}
       <div>
         {parseInt(
@@ -178,8 +201,10 @@ function WinningNumbers({ gameId }: { gameId: bigint | undefined }) {
   if (gameId === undefined) {
     return (
       <div className="tabular-nums space-y-4">
-        <div className="text-3xl">WINNING NUMBERS</div>
-        <div className="flex justify-center gap-4 text-6xl">SOON...</div>
+        <div className="text-xl md:text-3xl">WINNING NUMBERS</div>
+        <div className="flex justify-center gap-4 text-3xl md:text-6xl">
+          SOON...
+        </div>
       </div>
     );
   }
@@ -187,8 +212,10 @@ function WinningNumbers({ gameId }: { gameId: bigint | undefined }) {
   if (isPending)
     return (
       <div className="tabular-nums space-y-4">
-        <div className="text-3xl">WINNING NUMBERS</div>
-        <div className="flex justify-center gap-4 text-6xl">...</div>
+        <div className="text-xl md:text-3xl">WINNING NUMBERS</div>
+        <div className="flex justify-center gap-4 text-3xl md:text-6xl">
+          ...
+        </div>
       </div>
     );
 
@@ -198,8 +225,8 @@ function WinningNumbers({ gameId }: { gameId: bigint | undefined }) {
 
   return (
     <div className="tabular-nums space-y-4">
-      <div className="text-3xl">WINNING NUMBERS</div>
-      <div className="flex justify-center gap-4 text-6xl">
+      <div className="text-xl md:text-3xl">WINNING NUMBERS</div>
+      <div className="flex justify-center gap-4 text-3xl md:text-6xl">
         {numbers?.map((number) => <div key={number}>{number.toString()}</div>)}
       </div>
     </div>
@@ -215,7 +242,13 @@ const ticketsQuery = gql`
   }
 `;
 
-function Tickets({ gameId }: { gameId: bigint | undefined }) {
+function Tickets({
+  gameId,
+  label,
+}: {
+  gameId: bigint | undefined;
+  label?: string;
+}) {
   const { address } = useAccount();
   const { numbers } = useWinningNumbers(gameId);
 
@@ -234,13 +267,13 @@ function Tickets({ gameId }: { gameId: bigint | undefined }) {
   if (isPending)
     return (
       <div className="tabular-nums">
-        <div className="text-5xl">...</div>
+        <div className="text-xl md:text-5xl">...</div>
       </div>
     );
 
   return (
     <div className="tabular-nums">
-      <div className="space-y-4 text-5xl">
+      <div className="space-y-4 text-xl md:text-5xl">
         {data?.ticketPurchaseds.length ? (
           data.ticketPurchaseds.map((ticket) => {
             const isWinner =
@@ -254,7 +287,7 @@ function Tickets({ gameId }: { gameId: bigint | undefined }) {
                 </div>
                 {isWinner ? (
                   <div>
-                    <p className="text-2xl">OMFG YOU WON!!1</p>
+                    <p className="text-lg md:text-2xl">OMFG YOU WON!!1</p>
                     <ClaimButton ticketId={ticket.tokenId} />
                   </div>
                 ) : null}
@@ -262,7 +295,7 @@ function Tickets({ gameId }: { gameId: bigint | undefined }) {
             );
           })
         ) : (
-          <p className="text-6xl">NONE.</p>
+          <p className="text-xl md:text-5xl">{label ?? "NONE."}</p>
         )}
       </div>
     </div>
@@ -319,7 +352,7 @@ function ClaimButton({ ticketId }: { ticketId: bigint }) {
           console.error("Error claiming winnings", error);
         }
       }}
-      className="text-3xl px-4 py-1 bg-white text-blue-800 uppercase"
+      className="text-lg md:text-3xl px-4 py-1 bg-white text-blue-800 uppercase"
     >
       Claim your prize
     </button>
