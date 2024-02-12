@@ -17,8 +17,10 @@ import { useQuery } from "@tanstack/react-query";
 import ConnectButton from "./ConnectButton";
 import Link from "next/link";
 
-import { useIsClient, useLocalStorage } from "usehooks-ts";
-import { Fragment } from "react";
+import { useInterval, useIsClient, useLocalStorage } from "usehooks-ts";
+import { Fragment, useState } from "react";
+import { endOfDay, formatDistance } from "date-fns";
+import { UTCDate } from "@date-fns/utc";
 
 export function Powerbald() {
   const [useFilter, setUseFilter] = useLocalStorage("filter", true, {
@@ -28,6 +30,17 @@ export function Powerbald() {
     abi: LOOTERY_ABI,
     address: CONTRACT_ADDRESS,
     functionName: "currentGameId",
+  });
+
+  const { data: gameData, isPending: isPendingGameState } = useReadContract({
+    abi: LOOTERY_ABI,
+    address: CONTRACT_ADDRESS,
+    functionName: "gameData",
+    args: [gameId ?? 0n],
+    query: {
+      refetchInterval: 5000,
+      enabled: gameId !== undefined,
+    },
   });
 
   const lastGameId = gameId ? gameId - 1n : undefined;
@@ -98,20 +111,35 @@ export function Powerbald() {
             </div>
 
             <Jackpot gameId={gameId} />
-            <p className="text-base md:text-3xl">
-              <Link
-                href="https://warpcast.com/lottopgf/0xa5237d47"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block cursor-pointer px-4 py-2 border-4 bg-white text-blue-800 font-black uppercase"
-              >
-                Claim your free ticket now!
-              </Link>
-            </p>
+            <div className="space-y-2">
+              <p className="text-base md:text-3xl">
+                <Link
+                  href="https://warpcast.com/lottopgf/0xa5237d47"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block cursor-pointer px-4 py-2 border-4 bg-white text-blue-800 font-black uppercase"
+                >
+                  Claim your free ticket now!
+                </Link>
+              </p>
+              <p className="text-base md:text-xl">
+                {isPendingGameState ? (
+                  <>&nbsp;</>
+                ) : (
+                  <>
+                    {Number(gameData?.[1] ?? 0n).toLocaleString("en-US")}{" "}
+                    ALREADY CLAIMED TODAY
+                  </>
+                )}
+              </p>
+            </div>
+
             <hr className="border-2 max-w-32 mx-auto" />
             {isConnected ? (
               <>
                 <div className="mx-auto border-4 w-full max-w-[460px] p-4 space-y-4">
+                  <p className="text-lg md:text-2xl">NEXT DRAWING IN</p>
+                  <Countdown />
                   <p className="text-lg md:text-2xl">YOUR NUMBERS TODAY</p>
                   <Tickets gameId={gameId} label="NONE YET" />
                 </div>
@@ -148,15 +176,36 @@ export function Powerbald() {
             TOGGLE ANIMATIONS
           </button>
 
-          <div className="relative w-full h-[370px] overflow-hidden mt-[400px]">
+          <Link
+            href="https://lottopgf.org"
+            target="_blank"
+            className="block relative w-full h-[400px] pt-5 overflow-hidden mt-[400px] cursor-pointer"
+          >
+            <div className="absolute -top-0 left-1/2 ml-2 -translate-x-1/2">
+              <svg
+                viewBox="0 0 500 300"
+                className="mx-auto w-[400px] h-[200px]"
+              >
+                <path
+                  id="curve"
+                  d="M73.2,148.6c4-6.1,65.5-96.8,178.6-95.6c111.3,1.2,170.8,90.3,175.1,97"
+                  opacity={0}
+                />
+                <text width="500" fill="white">
+                  <textPath xlinkHref="#curve" fontSize={24}>
+                    Brought to you by LottoPGF &lt;3
+                  </textPath>
+                </text>
+              </svg>
+            </div>
             <Image
               src="/brian.webp"
               width={1000}
               height={1000}
               alt=""
-              className="object-contain absolute top-0 left-1/2 -translate-x-1/2 max-w-none"
+              className="object-contain absolute top-12 left-1/2 -translate-x-1/2 max-w-none"
             />
-          </div>
+          </Link>
         </div>
       </div>
     </>
@@ -356,5 +405,19 @@ function ClaimButton({ ticketId }: { ticketId: bigint }) {
     >
       Claim your prize
     </button>
+  );
+}
+
+function Countdown() {
+  const [countdown, setCountdown] = useState<string>();
+
+  useInterval(() => {
+    setCountdown(formatDistance(new UTCDate(), endOfDay(new UTCDate())));
+  }, 1000);
+
+  return (
+    <div className="text-xl md:text-4xl uppercase">
+      {countdown ? countdown : <>&nbsp;</>}
+    </div>
   );
 }
