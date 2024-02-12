@@ -135,17 +135,20 @@ export function Powerbald() {
             </div>
 
             <hr className="border-2 max-w-32 mx-auto" />
-            {isConnected ? (
-              <>
-                <div className="mx-auto border-4 w-full max-w-[460px] p-4 space-y-4">
-                  <p className="text-lg md:text-2xl">NEXT DRAWING IN</p>
-                  <Countdown />
+
+            <div className="mx-auto border-4 w-full max-w-[460px] p-4 space-y-4">
+              <p className="text-lg md:text-2xl">NEXT DRAWING IN</p>
+              <Countdown />
+              {isConnected ? (
+                <>
                   <p className="text-lg md:text-2xl">YOUR NUMBERS TODAY</p>
                   <Tickets gameId={gameId} label="NONE YET" />
-                </div>
-                <hr className="border-2 max-w-32 mx-auto" />
-              </>
-            ) : null}
+                </>
+              ) : null}
+            </div>
+
+            <hr className="border-2 max-w-32 mx-auto" />
+
             <div>
               <p className="text-xl w-full max-w-[460px] pt-1 mx-auto bg-white text-blue-800 tracking-widest leading-none">
                 YESTERDAYS DRAWING
