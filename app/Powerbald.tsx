@@ -1,26 +1,20 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import { gql, request } from "graphql-request";
 import Image from "next/image";
+import Link from "next/link";
+import { formatEther } from "viem";
+import { useAccount, useReadContract, useWriteContract } from "wagmi";
+import ConnectButton from "./ConnectButton";
 import "./Powerbald.css";
-import {
-  useAccount,
-  useConnect,
-  useContractWrite,
-  useReadContract,
-  useWriteContract,
-} from "wagmi";
 import { LOOTERY_ABI } from "./abi/Lootery";
 import { CONTRACT_ADDRESS } from "./config";
-import { formatEther } from "viem";
-import { request, gql } from "graphql-request";
-import { useQuery } from "@tanstack/react-query";
-import ConnectButton from "./ConnectButton";
-import Link from "next/link";
 
-import { useInterval, useIsClient, useLocalStorage } from "usehooks-ts";
-import { Fragment, useState } from "react";
-import { endOfDay, formatDistance } from "date-fns";
 import { UTCDate } from "@date-fns/utc";
+import { endOfDay, formatDistance } from "date-fns";
+import { Fragment, useState } from "react";
+import { useInterval, useIsClient, useLocalStorage } from "usehooks-ts";
 
 export function Powerbald() {
   const [useFilter, setUseFilter] = useLocalStorage("filter", true, {
@@ -250,6 +244,36 @@ const winningNumbersQuery = gql`
 function WinningNumbers({ gameId }: { gameId: bigint | undefined }) {
   const { numbers, isPending } = useWinningNumbers(gameId);
 
+  const { data: winningPickIds } = useReadContract({
+    abi: LOOTERY_ABI,
+    address: CONTRACT_ADDRESS,
+    functionName: "winningPickIds",
+    args: [gameId ?? 0n],
+    query: {
+      enabled: gameId !== undefined,
+    },
+  });
+
+  const { data: winningTokenId } = useReadContract({
+    abi: LOOTERY_ABI,
+    address: CONTRACT_ADDRESS,
+    functionName: "tokenByPickIdentity",
+    args: [gameId ?? 0n, winningPickIds ?? 0n, 0n],
+    query: {
+      enabled: gameId !== undefined && winningPickIds !== undefined,
+    },
+  });
+
+  const { data: owner } = useReadContract({
+    abi: LOOTERY_ABI,
+    address: CONTRACT_ADDRESS,
+    functionName: "ownerOf",
+    args: [winningTokenId ?? 0n],
+    query: {
+      enabled: winningTokenId !== undefined,
+    },
+  });
+
   if (gameId === undefined) {
     return (
       <div className="tabular-nums space-y-4">
@@ -281,6 +305,14 @@ function WinningNumbers({ gameId }: { gameId: bigint | undefined }) {
       <div className="flex justify-center gap-4 text-3xl md:text-6xl">
         {numbers?.map((number) => <div key={number}>{number.toString()}</div>)}
       </div>
+      {owner ? (
+        <div className="space-y-2">
+          <p className="text-3xl">WE HAVE A WINNER!!</p>
+          <p>
+            <Link href={`https://basescan.org/address/${owner}`}>{owner}</Link>
+          </p>
+        </div>
+      ) : null}
     </div>
   );
 }
