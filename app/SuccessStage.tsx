@@ -63,7 +63,7 @@ export async function SuccessStage({
     }
   }
 
-  const countdown = "midnight UTC tomorrow"; // formatDistance(new UTCDate(), endOfDay(new UTCDate()));
+  const countdown = formatDistance(new UTCDate(), endOfDay(new UTCDate()));
 
   return (
     <FrameContainer
