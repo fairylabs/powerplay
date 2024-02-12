@@ -260,7 +260,7 @@ function WinningNumbers({ gameId }: { gameId: bigint | undefined }) {
     functionName: "tokenByPickIdentity",
     args: [gameId ?? 0n, winningPickIds ?? 0n, 0n],
     query: {
-      enabled: gameId !== undefined && winningPickIds !== undefined,
+      enabled: gameId !== undefined && !!winningPickIds && winningPickIds > 0n,
     },
   });
 
