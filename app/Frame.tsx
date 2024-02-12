@@ -238,29 +238,24 @@ export async function Frame({
       state.stage === Stage.SELECTING_NUMBERS ||
       state.stage === Stage.SELECTING_NUMBERS_INVALID
     ) {
-      const [userDataResponse, isDegenResponse] = frameMessage?.requesterFid
-        ? await Promise.allSettled([
-            neynar.user
-              .userBulk(
-                frameMessage.requesterFid.toString(),
-                process.env.NEYNAR_API_KEY,
-                LOTTO_ACCOUNT_FID,
-              )
-              .then((f) => f.users.at(0) ?? null),
-            checkIsDegen(frameMessage.requesterFid),
-          ])
-        : [];
+      const userData = frameMessage?.requesterFid
+        ? await neynar.user
+            .userBulk(
+              frameMessage.requesterFid.toString(),
+              process.env.NEYNAR_API_KEY,
+              LOTTO_ACCOUNT_FID,
+            )
+            .then((f) => f.users.at(0) ?? null)
+        : null;
 
       const isFollowing = IS_DEBUG
         ? true
-        : userDataResponse?.status === "fulfilled" &&
-          userDataResponse.value?.viewer_context?.followed_by;
+        : userData?.viewer_context?.followed_by ?? false;
       const hasLiked = IS_DEBUG ? true : frameMessage?.likedCast;
-      const isActive =
-        userDataResponse?.status === "fulfilled" &&
-        userDataResponse.value?.active_status === "active";
-      const isDegen =
-        isDegenResponse?.status === "fulfilled" && isDegenResponse.value;
+      const isActive = userData?.active_status === "active";
+      const isDegen = userData
+        ? await checkIsDegen(userData.verifications)
+        : false;
 
       if (!isFollowing || !hasLiked) {
         return (
@@ -394,14 +389,25 @@ export interface AllowanceUser {
   tip_allowance: string;
 }
 
-async function checkIsDegen(fid: number): Promise<boolean> {
-  const url = new URL("https://www.degen.tips/api/airdrop2/tip_allowances");
+async function checkIsDegen(addresses: string[]): Promise<boolean> {
+  const results = await Promise.allSettled(
+    addresses.map((address) => getDegenAllowance(address)),
+  );
 
-  // 4s timeout
+  return results.some(
+    (result) => result.status === "fulfilled" && result.value.length > 0,
+  );
+}
+
+async function getDegenAllowance(address: string): Promise<AllowanceUser[]> {
+  const url = new URL("https://www.degen.tips/api/airdrop2/tip-allowance");
+  url.searchParams.set("address", address.toLowerCase());
+
+  // 3s timeout
   const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), 4000);
+  const id = setTimeout(() => controller.abort(), 3000);
 
-  const response: AllowanceUser[] = await fetch(url, {
+  const response = await fetch(url, {
     next: {
       revalidate: 3600,
     },
@@ -410,5 +416,5 @@ async function checkIsDegen(fid: number): Promise<boolean> {
 
   clearTimeout(id);
 
-  return response.some((user) => user.fid === fid.toString());
+  return response;
 }
