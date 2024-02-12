@@ -1,52 +1,84 @@
 "use client";
 
+import Image from "next/image";
 import "./Powerbald.css";
 
 export function Powerbald() {
   return (
-    <div id="container">
-      <h1 id="gm">Balding soon</h1>
-      <a
-        id="meme"
-        target="_blank"
-        onDoubleClick={() => {
-          window
-            .open("https://www.youtube.com/watch?v=xWSxmyW7oLw", "_blank")
-            ?.focus();
-        }}
-        onTouchEnd={(e) => {
-          if (
-            /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-              navigator.userAgent,
-            )
-          ) {
-            detectDoubleTapClosure()(e);
-          }
-        }}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img id="brian" src="/brian.webp" alt="Brian" />
-      </a>
-    </div>
-  );
-}
+    <>
+      <svg width="0" height="0">
+        <filter id="chroma">
+          <feColorMatrix
+            type="matrix"
+            result="red_"
+            values="4 0 0 0 0
+              0 0 0 0 0 
+              0 0 0 0 0 
+              0 0 0 1 0"
+          />
+          <feOffset in="red_" dy="0" result="red">
+            <animate
+              attributeName="dx"
+              calcMode="discrete"
+              values="0;0;3;0;3;0;1;0;0;2;0"
+              dur="4s"
+              repeatCount="indefinite"
+            />
+          </feOffset>
+          <feColorMatrix
+            type="matrix"
+            in="SourceGraphic"
+            result="blue_"
+            values="0 0 0 0 0
+              0 3 0 0 0 
+              0 0 10 0 0 
+              0 0 0 1 0"
+          />
+          <feOffset in="blue_" dx="-3" dy="0" result="blue">
+            <animate
+              attributeName="dx"
+              calcMode="discrete"
+              values="0;0;-5;0;-5;0;-2;0;0;-3;0"
+              dur="s"
+              repeatCount="indefinite"
+            />
+          </feOffset>
+          <feBlend mode="screen" in="red" in2="blue" />
+        </filter>
+      </svg>
 
-function detectDoubleTapClosure() {
-  let lastTap = 0;
-  let timeout: NodeJS.Timeout;
-  return function detectDoubleTap(event: React.TouchEvent<HTMLAnchorElement>) {
-    const curTime = new Date().getTime();
-    const tapLen = curTime - lastTap;
-    if (tapLen < 500 && tapLen > 0) {
-      window
-        .open("https://www.youtube.com/watch?v=xWSxmyW7oLw", "_blank")
-        ?.focus();
-      event.preventDefault();
-    } else {
-      timeout = setTimeout(() => {
-        clearTimeout(timeout);
-      }, 500);
-    }
-    lastTap = curTime;
-  };
+      <div className="flex text-white bg-[#2151f5] min-h-[100dvh] font-mono">
+        <div className="opacity-50 absolute z-10">
+          <div className="lines"></div>
+        </div>
+
+        <div
+          className="absolute left-4 top-4 font-bold text-4xl"
+          style={{ filter: "url(#chroma)" }}
+        >
+          LIVE TV
+        </div>
+        <div
+          className="m-auto text-8xl font-black"
+          style={{ filter: "url(#chroma)" }}
+        >
+          <Image
+            src="/logo.png"
+            width={600}
+            height={200}
+            alt=""
+            className="object-contain"
+          />
+        </div>
+        <Image
+          src="/brian.webp"
+          width={1000}
+          height={1000}
+          alt=""
+          className="object-contain absolute bottom-0 left-1/2 translate-y-[550px] -translate-x-1/2"
+          style={{ filter: "url(#chroma)" }}
+        />
+      </div>
+    </>
+  );
 }
