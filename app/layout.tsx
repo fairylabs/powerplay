@@ -1,8 +1,9 @@
+import { Analytics } from "@vercel/analytics/react";
 import { Metadata } from "next";
-import "./globals.css";
-import { cookieToInitialState } from "wagmi";
 import { headers } from "next/headers";
+import { cookieToInitialState } from "wagmi";
 import { ContextProvider } from "./context";
+import "./globals.css";
 import { config } from "./wagmi";
 
 export const metadata: Metadata = {
@@ -23,6 +24,7 @@ export default function RootLayout({
         <ContextProvider initialState={initialState}>
           {children}
         </ContextProvider>
+        <Analytics />
       </body>
     </html>
   );
