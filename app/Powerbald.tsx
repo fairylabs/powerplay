@@ -9,7 +9,7 @@ import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import ConnectButton from "./ConnectButton";
 import "./Powerbald.css";
 import { LOOTERY_ABI } from "./abi/Lootery";
-import { CONTRACT_ADDRESS } from "./config";
+import { CONTRACT_ADDRESS, FOLLOW_ACCOUNT_USERNAME } from "./config";
 
 import { UTCDate } from "@date-fns/utc";
 import { endOfDay, formatDistance } from "date-fns";
@@ -221,13 +221,29 @@ function Jackpot({ gameId }: { gameId: bigint | undefined }) {
   });
 
   return (
-    <div className="tabular-nums text-2xl md:text-7xl">
-      YOUR CHANCE TO WIN{" "}
+    <div className="tabular-nums text-2xl md:text-7xl space-y-4">
       <div>
-        {parseInt(
-          formatEther(gameData?.[0] ?? 1000000n * BigInt(1e18)),
-        ).toLocaleString("en-US")}{" "}
-        $DEGEN
+        <div>YOUR CHANCE TO WIN</div>
+        <div>
+          {parseInt(
+            formatEther(gameData?.[0] ?? 1000000n * BigInt(1e18)),
+          ).toLocaleString("en-US")}{" "}
+          $DEGEN
+        </div>
+      </div>
+
+      <div className="text-lg md:text-2xl uppercase blink">
+        <Link
+          href={`https://warpcast.com/${FOLLOW_ACCOUNT_USERNAME}`}
+          target="_blank"
+          className="cursor-pointer"
+        >
+          Today&apos;s Jackpot is sponsored by{" "}
+          <span className="underline hover:no-underline">
+            @{FOLLOW_ACCOUNT_USERNAME}
+          </span>
+          !
+        </Link>
       </div>
     </div>
   );

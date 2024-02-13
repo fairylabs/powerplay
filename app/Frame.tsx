@@ -21,7 +21,8 @@ import { LOOTERY_ABI } from "./abi/Lootery";
 import {
   CHAIN,
   CONTRACT_ADDRESS,
-  LOTTO_ACCOUNT_FID,
+  FOLLOW_ACCOUNT_FID,
+  FOLLOW_ACCOUNT_USERNAME,
   MAXIMUM_NUMBER,
   PICK_AMOUNT,
   publicClient,
@@ -243,7 +244,7 @@ export async function Frame({
             .userBulk(
               frameMessage.requesterFid.toString(),
               process.env.NEYNAR_API_KEY,
-              LOTTO_ACCOUNT_FID,
+              FOLLOW_ACCOUNT_FID,
             )
             .then((f) => f.users.at(0) ?? null)
         : null;
@@ -267,8 +268,11 @@ export async function Frame({
           >
             <FrameImage src={`${HOST}/frames/follow.png`} />
             <FrameButton action="post">Try again</FrameButton>
-            <FrameButton action="link" target="https://warpcast.com/lottopgf">
-              Follow @lottopgf
+            <FrameButton
+              action="link"
+              target={`https://warpcast.com/${FOLLOW_ACCOUNT_USERNAME}`}
+            >
+              {`Follow @${FOLLOW_ACCOUNT_USERNAME}`}
             </FrameButton>
           </FrameContainer>
         );
