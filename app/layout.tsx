@@ -5,10 +5,12 @@ import { cookieToInitialState } from "wagmi";
 import { ContextProvider } from "./context";
 import "./globals.css";
 import { config } from "./wagmi";
+import { HOST } from "./Frame";
 
 export const metadata: Metadata = {
   title: "Powerbald - The most $DEGEN lottery on farcaster",
   description: "Your chance to win 1,000,000 $DEGEN every day",
+  metadataBase: HOST ? new URL(HOST) : undefined,
 };
 
 export default function RootLayout({

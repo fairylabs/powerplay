@@ -80,10 +80,10 @@ export async function SuccessStage({
             alt=""
             tw="absolute top-0 left-0 w-full"
           />
-          <div tw="absolute left-[80px] w-[300px] top-[260px] text-center flex text-[50px] leading-[1.5] ">
+          <div tw="absolute left-[7%] w-[25%] top-[21vw] text-center flex text-[4vw] leading-[1.5] ">
             {countdown}
           </div>
-          <div tw="absolute right-[60px] w-[300px] top-[270px] flex text-6xl text-center justify-center">
+          <div tw="absolute right-[5%] w-[25%] top-[23vw] flex text-[5vw] text-center justify-center">
             {(state.numbers ?? finalUserData?.numbers ?? []).map((num) => (
               <div tw="flex flex-shrink-0 items-center mx-2" key={num}>
                 {num}
