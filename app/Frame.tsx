@@ -30,7 +30,7 @@ import {
 import { DEBUG_HUB_OPTIONS } from "./debug/constants";
 import { getRandomPicks } from "./utils/random";
 
-const IS_DEBUG = process.env.ENABLE_DEBUG === "true";
+export const IS_DEBUG = process.env.ENABLE_DEBUG === "true";
 
 export const HOST = process.env.NEXT_PUBLIC_HOST;
 

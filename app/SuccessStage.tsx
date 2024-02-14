@@ -11,7 +11,14 @@ import {
 import type { SatoriOptions } from "satori";
 import { TransactionExecutionError, getAddress, type Address } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { HOST, Stage, State, getStorageKey, type MintData } from "./Frame";
+import {
+  HOST,
+  Stage,
+  State,
+  getStorageKey,
+  type MintData,
+  IS_DEBUG,
+} from "./Frame";
 import { LOOTERY_ABI } from "./abi/Lootery";
 import {
   CHAIN,
@@ -80,18 +87,19 @@ export async function SuccessStage({
             alt=""
             tw="absolute top-0 left-0 w-full"
           />
-          <div tw="absolute left-[7%] w-[25%] top-[21vw] text-center flex text-[4vw] leading-[1.5] ">
+          <div tw="absolute left-[7%] w-[25%] top-[41%] text-center flex text-[25px] leading-[1.5] ">
             {countdown}
           </div>
-          <div tw="absolute right-[5%] w-[25%] top-[23vw] flex text-[5vw] text-center justify-center">
+          <div tw="absolute right-[1%] w-[33%] top-[42%] flex flex-wrap text-[28px] text-center leading-[1.5] justify-center">
             {(state.numbers ?? finalUserData?.numbers ?? []).map((num) => (
-              <div tw="flex flex-shrink-0 items-center mx-2" key={num}>
+              <div tw="flex flex-shrink-0 items-center mx-[4%]" key={num}>
                 {num}
               </div>
             ))}
           </div>
         </div>
       </FrameImage>
+      {IS_DEBUG ? <FrameButton action="post">Retry</FrameButton> : null}
       <FrameButton
         action="link"
         target={`${CHAIN.blockExplorers.default.url}/tx/${finalUserData?.hash}`}
