@@ -310,7 +310,7 @@ export async function Frame({
           ) : (
             <FrameImage src={`${HOST}/frames/pick.png`} />
           )}
-          <FrameInput text="Type your numbers like 1 2 7 19 25" />
+          <FrameInput text="Your numbers like 1 2 7 19 25" />
           <FrameButton>Submit your numbers 🍀</FrameButton>
           <FrameButton>Pick random 🔮</FrameButton>
         </FrameContainer>
