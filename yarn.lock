@@ -1032,17 +1032,17 @@
   dependencies:
     tslib "^2.4.0"
 
-"@tanstack/query-core@5.20.2":
-  version "5.20.2"
-  resolved "https://registry.npmjs.org/@tanstack/query-core/-/query-core-5.20.2.tgz#6ab0c260a42cc8706f6bbe366bd11436d276fba7"
-  integrity sha512-sAILwNiyA1I52e6imOsmNDUA/PuOayOzqz5jcLiIB5wBXqVk+HIiriWouPcAkjS8RqARfHUehuoPwcZ7Uzh0GQ==
+"@tanstack/query-core@5.20.5":
+  version "5.20.5"
+  resolved "https://registry.npmjs.org/@tanstack/query-core/-/query-core-5.20.5.tgz#12bb02a937cc8f4f158b1428c0ddef5a1f48479b"
+  integrity sha512-T1W28gGgWn0A++tH3lxj3ZuUVZZorsiKcv+R50RwmPYz62YoDEkG4/aXHZELGkRp4DfrW07dyq2K5dvJ4Wl1aA==
 
-"@tanstack/react-query@^5.20.2":
-  version "5.20.2"
-  resolved "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.20.2.tgz#72f8fc7f9478f75c56443bcd68576b2e5b235a89"
-  integrity sha512-949myvMY77cPqwb71m3wRG2ypgwPijshO5kN9w0CDKWrFC0X8Wh1mwSqst88kIr58tWlWNsGy3U40AK23RgYQA==
+"@tanstack/react-query@^5.20.5":
+  version "5.20.5"
+  resolved "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.20.5.tgz#ebf57b6d3344478d505ad8db09a8b29262a35dab"
+  integrity sha512-6MHwJ8G9cnOC/XKrwt56QMc91vN7hLlAQNUA0ubP7h9Jj3a/CmkUwT6ALdFbnVP+PsYdhW3WONa8WQ4VcTaSLQ==
   dependencies:
-    "@tanstack/query-core" "5.20.2"
+    "@tanstack/query-core" "5.20.5"
 
 "@types/chrome@^0.0.136":
   version "0.0.136"
@@ -1584,102 +1584,102 @@
     "@walletconnect/window-getters" "^1.0.1"
     tslib "1.14.1"
 
-"@web3modal/common@4.0.3":
-  version "4.0.3"
-  resolved "https://registry.npmjs.org/@web3modal/common/-/common-4.0.3.tgz#226deffd19a5ba9dcf3d3349efe32b8acace6b96"
-  integrity sha512-y9JiswlOe0bMFaRd2YlZY9jGmwmhDDmvm5zvTwQOeqEMhvtNVMgi6hdRT4W+ZHKOk79UtmwkIFIudPW8GTbcpQ==
+"@web3modal/common@4.0.5":
+  version "4.0.5"
+  resolved "https://registry.npmjs.org/@web3modal/common/-/common-4.0.5.tgz#e3c953d164446f4dd7cdaae85c61a6f15b07fe78"
+  integrity sha512-RQKyqJi3T+Ti57XEkb/4dYbrWMdGduZUacb1k+5H7GU4+Ev3HXjOdp2bcPqfEyr1DYKD/IsW/q/0oqXatwEeUQ==
   dependencies:
     dayjs "1.11.10"
 
-"@web3modal/core@4.0.3":
-  version "4.0.3"
-  resolved "https://registry.npmjs.org/@web3modal/core/-/core-4.0.3.tgz#f571725b9432b3d6f8112dab91867aed84083c69"
-  integrity sha512-W6kRzYFwjzjk4ZAfRnOZblcls9PFvufd9JHBeqw5ekO2tA4eZPN7s4BDSphiLgGtVBtEe/bb8OI+JIrBUhJCyA==
+"@web3modal/core@4.0.5":
+  version "4.0.5"
+  resolved "https://registry.npmjs.org/@web3modal/core/-/core-4.0.5.tgz#0365bf79178fe8496fdaabd1ed5a09e694fb3156"
+  integrity sha512-1QQHa8aNF1KX6ZAKBUU6UE4kwIa9x3FWX7Ak9eER/bTvmgyu2abJe3IwWPEt++nAjbvMKbIO6cATUXfSVk1Zyw==
   dependencies:
-    "@web3modal/common" "4.0.3"
-    "@web3modal/wallet" "4.0.3"
+    "@web3modal/common" "4.0.5"
+    "@web3modal/wallet" "4.0.5"
     valtio "1.11.2"
 
-"@web3modal/polyfills@4.0.3":
-  version "4.0.3"
-  resolved "https://registry.npmjs.org/@web3modal/polyfills/-/polyfills-4.0.3.tgz#40875c96263ca0f0d14806b502192d3b26e045ed"
-  integrity sha512-zG+i9qNmkuOw5ciR4M4b7kXNdF0yHpLmfGd/nq09U6MguzQQntjE9Y+KL/jN8TugHarHUhfwp1VE2g4Kc4jLGQ==
+"@web3modal/polyfills@4.0.5":
+  version "4.0.5"
+  resolved "https://registry.npmjs.org/@web3modal/polyfills/-/polyfills-4.0.5.tgz#606a361f5a8bb218425417c06c0b8513b7da2742"
+  integrity sha512-2jnu4CEVnhatq/Bzyk4IgkPVGY3GgD13hZAPCx8mztZzPkrbKrSKfuq2KTVuTjw392DPp7EMmxmm8SSFnjwzuA==
   dependencies:
     buffer "6.0.3"
 
-"@web3modal/scaffold-react@4.0.3":
-  version "4.0.3"
-  resolved "https://registry.npmjs.org/@web3modal/scaffold-react/-/scaffold-react-4.0.3.tgz#02a14de1b2e2f4d66b793df720638c2f047dcb48"
-  integrity sha512-9sd5KfHBnneacOiuTZr98AQTSJppBHF1hmhyeKL67v5YTn10n9RsWFmocot6IFufSD4IOVGFqXMpo9No/PoG7w==
+"@web3modal/scaffold-react@4.0.5":
+  version "4.0.5"
+  resolved "https://registry.npmjs.org/@web3modal/scaffold-react/-/scaffold-react-4.0.5.tgz#578c208fc9c229df68d520a2918986547acae05b"
+  integrity sha512-4JQhLHH+IRjpsRbVtt2skaxzTKYqpLTr7zTMZyTECgOXpWyOtTCN0vgc2YatWbct972sZlJ0V8llIwDiGodHgA==
   dependencies:
-    "@web3modal/scaffold" "4.0.3"
+    "@web3modal/scaffold" "4.0.5"
 
-"@web3modal/scaffold-utils@4.0.3":
-  version "4.0.3"
-  resolved "https://registry.npmjs.org/@web3modal/scaffold-utils/-/scaffold-utils-4.0.3.tgz#fa21a2ae71c7076f91e73ece289afbe7a296da6d"
-  integrity sha512-JO8QpJYZJn8qsQ40Ixfd0NNR3z9xR+lOCqpOSiun4z/zZ3aA4thIXNXieHWPKgGMes1aUrTIggIw18EdB0Y6Lg==
+"@web3modal/scaffold-utils@4.0.5":
+  version "4.0.5"
+  resolved "https://registry.npmjs.org/@web3modal/scaffold-utils/-/scaffold-utils-4.0.5.tgz#daf260421083f58a8cebde037cd05bf3ae5fe696"
+  integrity sha512-FUjtpnf22TEgYpsG6oom1YtyDeydkWFmdXxf+xbnp+SlxuMpff9iF22bWIw1uM5eZYFQH3nIyDozCbOD/grQ+Q==
   dependencies:
-    "@web3modal/polyfills" "4.0.3"
-    "@web3modal/scaffold" "4.0.3"
+    "@web3modal/polyfills" "4.0.5"
+    "@web3modal/scaffold" "4.0.5"
     valtio "1.11.2"
 
-"@web3modal/scaffold-vue@4.0.3":
-  version "4.0.3"
-  resolved "https://registry.npmjs.org/@web3modal/scaffold-vue/-/scaffold-vue-4.0.3.tgz#5065e2c05dcc42f805d3e2c2d1e08ecfabf46ff5"
-  integrity sha512-3GShGxyUBikx7ndAwww4MzMFP5rA0/1orSXpDEqCDv3cbUxdNrm6/F1Wvmel7lsnnSPsaMrcCKY5dFtgQPg5Eg==
+"@web3modal/scaffold-vue@4.0.5":
+  version "4.0.5"
+  resolved "https://registry.npmjs.org/@web3modal/scaffold-vue/-/scaffold-vue-4.0.5.tgz#6c817e1c11ca01c73bb797c96a43b32582f247eb"
+  integrity sha512-FrFDoqGRATPfNYdYug6vX0g79HdL8u08QcC3ZTix1yv2iYz424X7tSm+zQ0FBh7DnZPMYIximSNy1jrEw1wPoQ==
   dependencies:
-    "@web3modal/scaffold" "4.0.3"
+    "@web3modal/scaffold" "4.0.5"
 
-"@web3modal/scaffold@4.0.3":
-  version "4.0.3"
-  resolved "https://registry.npmjs.org/@web3modal/scaffold/-/scaffold-4.0.3.tgz#46047e5f65e913ace80249a5f7d06b9ac1d3f6c7"
-  integrity sha512-LtL8DJitYLXq9Vd1swdrf+eJjljlKyPtXVSU51Z7AfbdsGoUT4OnimBHQEI45HJwJVpMxtpngaBOenwEHwMoYA==
+"@web3modal/scaffold@4.0.5":
+  version "4.0.5"
+  resolved "https://registry.npmjs.org/@web3modal/scaffold/-/scaffold-4.0.5.tgz#b6213909b0b6d1c89ebafd047d6e62c584a5d649"
+  integrity sha512-K2j/fmUAPyZ6M5DvOAf88qcubrB//ulkOIS1ZX7R7g8isp9z7AtWn2c0b/O+l9CEeiKn0ZSIa7VF7GrUFDZ8vQ==
   dependencies:
-    "@web3modal/common" "4.0.3"
-    "@web3modal/core" "4.0.3"
-    "@web3modal/ui" "4.0.3"
+    "@web3modal/common" "4.0.5"
+    "@web3modal/core" "4.0.5"
+    "@web3modal/ui" "4.0.5"
     lit "3.1.0"
 
-"@web3modal/siwe@4.0.3":
-  version "4.0.3"
-  resolved "https://registry.npmjs.org/@web3modal/siwe/-/siwe-4.0.3.tgz#764f965e6613d40ab092d6425c6e63f468308822"
-  integrity sha512-7pbysK7/kP/C9nYgmx4lb7N55TsnTpRmCWj6aN5TY5GBfm3YsmRiHFPB7yemUo2RaiQzCkfzyvcmFMLliVRRRw==
+"@web3modal/siwe@4.0.5":
+  version "4.0.5"
+  resolved "https://registry.npmjs.org/@web3modal/siwe/-/siwe-4.0.5.tgz#d5a0a71508b76f451214329885d23d4283fc1122"
+  integrity sha512-JxYoM0rvgekpvd2Wyw1mtq7mbv8JBsbP22K5Evf4ZUupVAgoeNHDGCBKK8nKwdwMuc2AfsAcdNqx+rwS6N9WLQ==
   dependencies:
-    "@web3modal/core" "4.0.3"
-    "@web3modal/scaffold-utils" "4.0.3"
+    "@web3modal/core" "4.0.5"
+    "@web3modal/scaffold-utils" "4.0.5"
   optionalDependencies:
     react ">=17"
     react-dom ">=17"
     vue ">=3"
 
-"@web3modal/ui@4.0.3":
-  version "4.0.3"
-  resolved "https://registry.npmjs.org/@web3modal/ui/-/ui-4.0.3.tgz#da732fdf152d11c8c1ea012742ed403a4349eddd"
-  integrity sha512-0G6ccylt4rSsb/Xt1BhARgT5mpnt7Dk5rR91SSHjIyyOC4kwG2XMKeEjEDr4HsTQk/749diiuBUILTJVTRikIQ==
+"@web3modal/ui@4.0.5":
+  version "4.0.5"
+  resolved "https://registry.npmjs.org/@web3modal/ui/-/ui-4.0.5.tgz#de1769e8164f1869e4f118c7185cb25c12ee0ed2"
+  integrity sha512-IGNzHtRWZjbjv/8s7kbVknrlV/R0OrVTmlrQMa4H16kEuInWBZkKjfJ6zlqEKNrhppJ01Ft11h4d3NWscu47fg==
   dependencies:
     lit "3.1.0"
     qrcode "1.5.3"
 
-"@web3modal/wagmi@^4.0.3":
-  version "4.0.3"
-  resolved "https://registry.npmjs.org/@web3modal/wagmi/-/wagmi-4.0.3.tgz#11513c97a239cffc604772909f2ea2c01f32855d"
-  integrity sha512-pAV28i2SyE5i/xOd8YZcWjCyCwRaNBtEBXEKVWX8JNrPKan2PKbtDZjRYYPLFkqG7NbW+Y+UlPgkZm006l+uFw==
+"@web3modal/wagmi@^4.0.5":
+  version "4.0.5"
+  resolved "https://registry.npmjs.org/@web3modal/wagmi/-/wagmi-4.0.5.tgz#1e88ecd9d50d6baf69e19d15083829326a207a2f"
+  integrity sha512-uUwhpv3gnq0SmXwO1YdbTVSZfZfgjEdp7lsc6u+Uoxv5Bw5XFkIV6FsSlQFk7SU3So+GEGa/u9iNejnl40hQUA==
   dependencies:
-    "@web3modal/polyfills" "4.0.3"
-    "@web3modal/scaffold" "4.0.3"
-    "@web3modal/scaffold-react" "4.0.3"
-    "@web3modal/scaffold-utils" "4.0.3"
-    "@web3modal/scaffold-vue" "4.0.3"
+    "@web3modal/polyfills" "4.0.5"
+    "@web3modal/scaffold" "4.0.5"
+    "@web3modal/scaffold-react" "4.0.5"
+    "@web3modal/scaffold-utils" "4.0.5"
+    "@web3modal/scaffold-vue" "4.0.5"
   optionalDependencies:
-    "@web3modal/siwe" "4.0.3"
+    "@web3modal/siwe" "4.0.5"
     react ">=17"
     react-dom ">=17"
     vue ">=3"
 
-"@web3modal/wallet@4.0.3":
-  version "4.0.3"
-  resolved "https://registry.npmjs.org/@web3modal/wallet/-/wallet-4.0.3.tgz#f721a6ccf80766ed5f7a9199d61eb942383cc252"
-  integrity sha512-sehj0FomDObOZKwDLG78Xec9TmwWmZjY+3QqR5SlAjLLhjSkp1PwHH2YW2OJisOs13wUKdRWyS4OvN1DJhrxyw==
+"@web3modal/wallet@4.0.5":
+  version "4.0.5"
+  resolved "https://registry.npmjs.org/@web3modal/wallet/-/wallet-4.0.5.tgz#583ee0630b25d5a60926437637f3e8226f6e7ac7"
+  integrity sha512-rw9LtXX7azOjpV/WWh2KRG4zlvXW+tE+QRxl0b12S4WgQXLoteqzAFiumvg/H4fBf73WFJ6Bos3g7Mf4M8Dp6A==
   dependencies:
     zod "3.22.4"
 
@@ -5854,10 +5854,24 @@ viem@^1.0.0, viem@^1.1.4, viem@^1.12.2:
     isows "1.0.3"
     ws "8.13.0"
 
-viem@^2.7.1, viem@^2.7.8:
+viem@^2.7.1:
   version "2.7.8"
   resolved "https://registry.npmjs.org/viem/-/viem-2.7.8.tgz#ca60552190cdc501cf4e1d1140d8da7625b1b1f4"
   integrity sha512-5r5pkBDBmihCvMx4b3MqtP0FoZCRWE2ML1DssU80+vhJQur0PKd4yHdLbbvoiGGVD6bYiA394juhfdSvXIGgFA==
+  dependencies:
+    "@adraffy/ens-normalize" "1.10.0"
+    "@noble/curves" "1.2.0"
+    "@noble/hashes" "1.3.2"
+    "@scure/bip32" "1.3.2"
+    "@scure/bip39" "1.2.1"
+    abitype "1.0.0"
+    isows "1.0.3"
+    ws "8.13.0"
+
+viem@^2.7.9:
+  version "2.7.9"
+  resolved "https://registry.npmjs.org/viem/-/viem-2.7.9.tgz#0d2b0c4722530b53fbef449d70f0cedc1bb867b0"
+  integrity sha512-iDfc8TwaZFp1K95zlsxYh6Cs0OWCt35Tqs8uYgXKSxtz7w075mZ0H5SJ8zSyJGoEaticVDhtdmRRX6TtcW9EeQ==
   dependencies:
     "@adraffy/ens-normalize" "1.10.0"
     "@noble/curves" "1.2.0"
