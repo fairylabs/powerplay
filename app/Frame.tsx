@@ -177,8 +177,8 @@ export async function Frame({
 }) {
   const previousFrame = getPreviousFrame<State>(searchParams);
   const frameImageOptions: SatoriOptions = {
-    width: 800,
-    height: 420,
+    width: 600,
+    height: 314,
     debug: IS_DEBUG,
     fonts: [
       {
@@ -333,10 +333,10 @@ export async function Frame({
                 alt=""
                 tw="absolute top-0 left-0 w-full"
               />
-              <div tw="absolute w-full bottom-[19%] flex text-[2%] left-[1%]">
+              <div tw="absolute w-full bottom-[17%] flex text-[40px] left-[1.2%]">
                 {state.numbers?.map((num) => (
                   <div
-                    tw="flex flex-shrink-0 0 items-center justify-center w-[13%] rounded-full mx-[3.2%] text-center"
+                    tw="flex flex-shrink-0 0 items-center justify-center w-[13%] rounded-full mx-[3.105%] text-center"
                     key={num}
                   >
                     {num}
