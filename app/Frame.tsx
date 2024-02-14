@@ -118,12 +118,11 @@ const reducer: FrameReducer<State> = (state, action: PreviousFrame<State>) => {
     }
 
     if (action.postBody?.untrustedData.buttonIndex === 1) {
-      const numbers = sanitizePicks(
-        action.postBody.untrustedData.inputText ?? "",
-      );
+      const input = action.postBody.untrustedData.inputText ?? "";
+      const numbers = sanitizePicks(input);
       const valid = validatePicks(numbers);
 
-      !valid && console.info("INVALID PICKS", numbers);
+      !valid && console.info("INVALID PICKS", input, numbers);
 
       if (!numbers.size) {
         return {
