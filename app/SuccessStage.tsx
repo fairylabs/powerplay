@@ -65,7 +65,7 @@ export async function SuccessStage({
 
       await kv.hset(getStorageKey(gameId, frameMessage.requesterFid), data);
 
-      console.log("NEW MINT", data);
+      console.info("NEW MINT", data);
       finalUserData = data;
     }
   }

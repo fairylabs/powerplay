@@ -123,7 +123,7 @@ const reducer: FrameReducer<State> = (state, action: PreviousFrame<State>) => {
       );
       const valid = validatePicks(numbers);
 
-      !valid && console.log("INVALID PICKS", numbers);
+      !valid && console.info("INVALID PICKS", numbers);
 
       if (!numbers.size) {
         return {
