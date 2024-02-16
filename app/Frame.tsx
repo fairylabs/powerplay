@@ -257,7 +257,7 @@ export async function Frame({
         ? await checkIsDegen(userData.verifications)
         : false;
 
-      if (!isFollowing || !hasLiked) {
+      if (!isFollowing /* || !hasLiked*/) {
         return (
           <FrameContainer
             postUrl="/frames"
@@ -278,6 +278,7 @@ export async function Frame({
       }
 
       if (!isActive && !isDegen) {
+        console.info("NO ALLOWANCE", userData?.username, userData?.fid);
         return (
           <FrameContainer
             postUrl="/frames"
