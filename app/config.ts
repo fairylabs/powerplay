@@ -13,6 +13,11 @@ export const MAXIMUM_NUMBER = 25;
 export const FOLLOW_ACCOUNT_FID = 9410;
 export const FOLLOW_ACCOUNT_USERNAME = "gmoney.eth";
 
+export const FID_ALLOW_LIST = [
+  194499, // stefan
+];
+export const FID_OG_LIMIT = 25000; // anyone under 25k is allowed to enter
+
 export const CONTRACT_ADDRESS = "0xc94e65A6d6C145B6A0342dA9b5e8Dc3928505857";
 export const CHAIN = base;
 

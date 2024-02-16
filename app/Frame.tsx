@@ -21,6 +21,8 @@ import { LOOTERY_ABI } from "./abi/Lootery";
 import {
   CHAIN,
   CONTRACT_ADDRESS,
+  FID_ALLOW_LIST,
+  FID_OG_LIMIT,
   FOLLOW_ACCOUNT_FID,
   FOLLOW_ACCOUNT_USERNAME,
   MAXIMUM_NUMBER,
@@ -261,7 +263,9 @@ export async function Frame({
         : userData?.viewer_context?.followed_by ?? false;
       const hasLiked = IS_DEBUG ? true : frameMessage?.likedCast;
       const isActive = userData?.active_status === "active";
-      const isDegen = userData
+      const isAllowListed = !!userData && FID_ALLOW_LIST.includes(userData.fid);
+      const isOG = !!userData && userData.fid <= FID_OG_LIMIT;
+      const isDegen = !!userData
         ? await checkIsDegen(userData.verifications)
         : false;
 
@@ -285,7 +289,7 @@ export async function Frame({
         );
       }
 
-      if (!isActive && !isDegen) {
+      if (!isActive && !isDegen && !isAllowListed && !isOG) {
         console.info("NO ALLOWANCE", {
           fid: userData?.fid,
           username: userData?.username,
