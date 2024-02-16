@@ -124,7 +124,13 @@ const reducer: FrameReducer<State> = (state, action: PreviousFrame<State>) => {
       const numbers = sanitizePicks(input);
       const valid = validatePicks(numbers);
 
-      !valid && console.info("INVALID PICKS", input, numbers);
+      if (!valid) {
+        console.info("INVALID PICKS", {
+          fid: action.postBody.untrustedData.fid,
+          input,
+          numbers,
+        });
+      }
 
       if (!numbers.size) {
         return {
@@ -280,7 +286,10 @@ export async function Frame({
       }
 
       if (!isActive && !isDegen) {
-        console.info("NO ALLOWANCE", userData?.username, userData?.fid);
+        console.info("NO ALLOWANCE", {
+          fid: userData?.fid,
+          username: userData?.username,
+        });
         return (
           <FrameContainer
             postUrl="/frames"
