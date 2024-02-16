@@ -109,7 +109,10 @@ const reducer: FrameReducer<State> = (state, action: PreviousFrame<State>) => {
     state.stage === Stage.SELECTING_NUMBERS ||
     state.stage === Stage.SELECTING_NUMBERS_INVALID
   ) {
-    if (action.postBody?.untrustedData.buttonIndex === 2) {
+    const input = action.postBody?.untrustedData.inputText ?? "";
+
+    // Random pick or no input at all, propose random numbers
+    if (action.postBody?.untrustedData.buttonIndex === 2 || input === "") {
       return {
         ...state,
         numbers: Array.from(getRandomPicks(PICK_AMOUNT, MAXIMUM_NUMBER)),
@@ -118,7 +121,6 @@ const reducer: FrameReducer<State> = (state, action: PreviousFrame<State>) => {
     }
 
     if (action.postBody?.untrustedData.buttonIndex === 1) {
-      const input = action.postBody.untrustedData.inputText ?? "";
       const numbers = sanitizePicks(input);
       const valid = validatePicks(numbers);
 
