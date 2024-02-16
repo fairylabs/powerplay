@@ -257,7 +257,7 @@ export async function Frame({
         ? await checkIsDegen(userData.verifications)
         : false;
 
-      if (!isFollowing || !hasLiked) {
+      if (!isFollowing /* || !hasLiked*/) {
         return (
           <FrameContainer
             postUrl="/frames"
