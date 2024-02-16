@@ -358,7 +358,7 @@ export async function Frame({
         previousFrame={previousFrame}
         pathname="/"
       >
-        <FrameImage src={`${HOST}/frames/initial.gif`} />
+        <FrameImage src={`${HOST}/frames/initial.gif?c=punkape`} />
         <FrameButton>🔵 🎰 🌟 Claim free ticket 🌟 🎰 🔵</FrameButton>
       </FrameContainer>
     );
