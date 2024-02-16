@@ -226,24 +226,28 @@ function Jackpot({ gameId }: { gameId: bigint | undefined }) {
         <div>YOUR CHANCE TO WIN</div>
         <div>
           {parseInt(
-            formatEther(gameData?.[0] ?? 1000000n * BigInt(1e18)),
+            formatEther(gameData?.[0] ?? 2000000n * BigInt(1e18)),
           ).toLocaleString("en-US")}{" "}
           $DEGEN
         </div>
       </div>
 
       <div className="text-lg md:text-2xl uppercase blink">
+        Today&apos;s Jackpot is sponsored by{" "}
         <Link
           href={`https://warpcast.com/${FOLLOW_ACCOUNT_USERNAME}`}
-          target="_blank"
-          className="cursor-pointer"
+          className="underline hover:no-underline"
         >
-          Today&apos;s Jackpot is sponsored by{" "}
-          <span className="underline hover:no-underline">
-            @{FOLLOW_ACCOUNT_USERNAME}
-          </span>
-          !
+          @{FOLLOW_ACCOUNT_USERNAME}
+        </Link>{" "}
+        and{" "}
+        <Link
+          href={`https://warpcast.com/wake`}
+          className="underline hover:no-underline"
+        >
+          @wake
         </Link>
+        !
       </div>
     </div>
   );
