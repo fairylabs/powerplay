@@ -21,13 +21,16 @@ import {
 } from "./Frame";
 import { LOOTERY_ABI } from "./abi/Lootery";
 import {
+  BONUS_ROUND,
   CHAIN,
   CONTRACT_ADDRESS,
+  MAXIMUM_NUMBER,
   MINTER_PRIVATE_KEY,
   PICK_AMOUNT,
   publicClient,
   walletClient,
 } from "./config";
+import { getRandomPicks } from "./utils/random";
 
 export async function SuccessStage({
   gameId,
@@ -122,12 +125,27 @@ export async function SuccessStage({
 }
 
 async function mintToken(address: Address, numbers: number[]) {
+  const bonusPicks = Array.from(getRandomPicks(PICK_AMOUNT, MAXIMUM_NUMBER));
+
+  const gameId = await publicClient.readContract({
+    abi: LOOTERY_ABI,
+    address: CONTRACT_ADDRESS,
+    functionName: "currentGameId",
+  });
+
+  const isBonusRound = gameId === BONUS_ROUND;
+
   // Try minting a new token
   const { request } = await publicClient.simulateContract({
     address: CONTRACT_ADDRESS,
     abi: LOOTERY_ABI,
     functionName: "ownerPick",
-    args: [[{ whomst: address, picks: numbers }]],
+    args: [
+      [
+        { whomst: address, picks: numbers },
+        ...(isBonusRound ? [{ whomst: address, picks: bonusPicks }] : []),
+      ],
+    ],
     account: privateKeyToAccount(MINTER_PRIVATE_KEY),
   });
 
@@ -136,6 +154,11 @@ async function mintToken(address: Address, numbers: number[]) {
   }
 
   try {
+    if (IS_DEBUG) {
+      throw new Error("DEBUGGING", { cause: request });
+      return null;
+    }
+
     const hash = await walletClient.writeContract(request);
     return hash;
   } catch (error) {
@@ -144,6 +167,8 @@ async function mintToken(address: Address, numbers: number[]) {
       error.details.startsWith("gas required exceeds allowance")
     ) {
       console.error("Gas required exceeds allowance");
+    } else {
+      console.error(error);
     }
   }
 
