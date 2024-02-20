@@ -125,7 +125,8 @@ export async function SuccessStage({
 }
 
 async function mintToken(address: Address, numbers: number[]) {
-  const bonusPicks = Array.from(getRandomPicks(PICK_AMOUNT, MAXIMUM_NUMBER));
+  const bonusPicks1 = Array.from(getRandomPicks(PICK_AMOUNT, MAXIMUM_NUMBER));
+  const bonusPicks2 = Array.from(getRandomPicks(PICK_AMOUNT, MAXIMUM_NUMBER));
 
   const gameId = await publicClient.readContract({
     abi: LOOTERY_ABI,
@@ -143,7 +144,13 @@ async function mintToken(address: Address, numbers: number[]) {
     args: [
       [
         { whomst: address, picks: numbers },
-        ...(isBonusRound ? [{ whomst: address, picks: bonusPicks }] : []),
+        ...(isBonusRound
+          ? [
+              // Triple wednesday!
+              { whomst: address, picks: bonusPicks1 },
+              { whomst: address, picks: bonusPicks2 },
+            ]
+          : []),
       ],
     ],
     account: privateKeyToAccount(MINTER_PRIVATE_KEY),

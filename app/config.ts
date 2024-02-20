@@ -13,7 +13,7 @@ export const MAXIMUM_NUMBER = 25;
 export const FOLLOW_ACCOUNT_FID = 9410;
 export const FOLLOW_ACCOUNT_USERNAME = "gmoney.eth";
 
-export const BONUS_ROUND = 7n; // Bonus tickets for this round!
+export const BONUS_ROUND = 9n; // Bonus tickets for this round!
 
 export const FID_ALLOW_LIST = [
   194499, // stefan
