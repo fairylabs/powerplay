@@ -204,7 +204,12 @@ export async function Frame({
   const frameMessage = await getFrameMessage(previousFrame.postBody, {
     ...(!IS_DEBUG
       ? {
-          hubHttpUrl: "http://nemes.farcaster.xyz:2281",
+          hubHttpUrl: "https://hub-api.neynar.com",
+          hubRequestOptions: {
+            headers: {
+              api_key: process.env.NEYNAR_API_KEY!,
+            },
+          },
         }
       : DEBUG_HUB_OPTIONS),
   });
