@@ -202,7 +202,11 @@ export async function Frame({
   };
 
   const frameMessage = await getFrameMessage(previousFrame.postBody, {
-    ...(!IS_DEBUG ? {} : DEBUG_HUB_OPTIONS),
+    ...(!IS_DEBUG
+      ? {
+          hubHttpUrl: "http://nemes.farcaster.xyz:2281",
+        }
+      : DEBUG_HUB_OPTIONS),
   });
 
   if (frameMessage && !frameMessage?.isValid) {
