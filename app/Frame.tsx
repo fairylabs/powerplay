@@ -204,7 +204,7 @@ export async function Frame({
   const frameMessage = await getFrameMessage(previousFrame.postBody, {
     ...(!IS_DEBUG
       ? {
-          hubHttpUrl: "https://hub-api.neynar.com",
+          hubHttpUrl: process.env.FC_HUB_URL,
           hubRequestOptions: {
             headers: {
               api_key: process.env.NEYNAR_API_KEY!,
