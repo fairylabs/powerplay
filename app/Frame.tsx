@@ -382,7 +382,9 @@ export async function Frame({
         previousFrame={previousFrame}
         pathname="/"
       >
-        <FrameImage src={`${HOST}/frames/initial.gif?c=punkape`} />
+        <FrameImage
+          src={`${HOST}/frames/initial.gif?c=${FOLLOW_ACCOUNT_USERNAME}`}
+        />
         <FrameButton>🔵 🎰 🌟 Claim free ticket 🌟 🎰 🔵</FrameButton>
       </FrameContainer>
     );

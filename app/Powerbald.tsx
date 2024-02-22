@@ -239,6 +239,13 @@ function Jackpot({ gameId }: { gameId: bigint | undefined }) {
           className="underline hover:no-underline"
         >
           @{FOLLOW_ACCOUNT_USERNAME}
+        </Link>
+        ,{" "}
+        <Link
+          href={`https://warpcast.com/gmoney.eth`}
+          className="underline hover:no-underline"
+        >
+          @gmoney.eth
         </Link>{" "}
         and{" "}
         <Link
