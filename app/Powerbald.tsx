@@ -226,7 +226,7 @@ function Jackpot({ gameId }: { gameId: bigint | undefined }) {
         <div>YOUR CHANCE TO WIN</div>
         <div>
           {parseInt(
-            formatEther(gameData?.[0] ?? 2000000n * BigInt(1e18)),
+            formatEther(gameData?.[0] ?? 3000000n * BigInt(1e18)),
           ).toLocaleString("en-US")}{" "}
           $DEGEN
         </div>
