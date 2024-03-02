@@ -240,6 +240,23 @@ export async function Frame({
         : null;
     const hasClaimedTodaysTicket = !!userData;
 
+    return (
+      <FrameContainer
+        postUrl="/frames"
+        state={state}
+        previousFrame={previousFrame}
+        pathname="/"
+      >
+        <FrameImage src={`${HOST}/frames/finished.png`} />
+        <FrameButton
+          action="link"
+          target={`https://warpcast.com/~/channel/lotto`}
+        >
+          {`Check /lotto for more information`}
+        </FrameButton>
+      </FrameContainer>
+    );
+
     if (state.stage === Stage.SUCCESS || hasClaimedTodaysTicket) {
       return (
         <SuccessStage

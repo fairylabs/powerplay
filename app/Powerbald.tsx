@@ -42,6 +42,23 @@ export function Powerbald() {
   const { isConnected } = useAccount();
 
   return (
+    <div className="flex flex-col text-white bg-[#2151f5] font-mono pt-8 min-h-[100dvh]">
+      <div className="bg-white py-4 px-8 mx-auto w-fit mb-6">
+        <Image
+          src="/logo.png"
+          width={400}
+          height={111}
+          alt=""
+          className="object-contain mx-auto"
+        />
+      </div>
+      <h1 className="text-xl md:text-5xl text-center font-bold uppercase">
+        Powerbald is under Maintenance <br /> Please check back later.
+      </h1>
+    </div>
+  );
+
+  return (
     <>
       {useFilter && (
         <svg width="0" height="0">
