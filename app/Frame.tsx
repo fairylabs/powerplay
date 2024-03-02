@@ -257,154 +257,154 @@ export async function Frame({
       </FrameContainer>
     );
 
-    if (state.stage === Stage.SUCCESS || hasClaimedTodaysTicket) {
-      return (
-        <SuccessStage
-          gameId={gameId}
-          userData={userData}
-          frameImageOptions={frameImageOptions}
-          previousFrame={previousFrame}
-          state={state}
-          frameMessage={frameMessage}
-        />
-      );
-    }
+    // if (state.stage === Stage.SUCCESS || hasClaimedTodaysTicket) {
+    //   return (
+    //     <SuccessStage
+    //       gameId={gameId}
+    //       userData={userData}
+    //       frameImageOptions={frameImageOptions}
+    //       previousFrame={previousFrame}
+    //       state={state}
+    //       frameMessage={frameMessage}
+    //     />
+    //   );
+    // }
 
-    if (
-      state.stage === Stage.SELECTING_NUMBERS ||
-      state.stage === Stage.SELECTING_NUMBERS_INVALID
-    ) {
-      const userData = frameMessage?.requesterFid
-        ? await neynar.user
-            .userBulk(
-              frameMessage.requesterFid.toString(),
-              process.env.NEYNAR_API_KEY,
-              FOLLOW_ACCOUNT_FID,
-            )
-            .then((f) => f.users.at(0) ?? null)
-        : null;
+    // if (
+    //   state.stage === Stage.SELECTING_NUMBERS ||
+    //   state.stage === Stage.SELECTING_NUMBERS_INVALID
+    // ) {
+    //   const userData = frameMessage?.requesterFid
+    //     ? await neynar.user
+    //         .userBulk(
+    //           frameMessage.requesterFid.toString(),
+    //           process.env.NEYNAR_API_KEY,
+    //           FOLLOW_ACCOUNT_FID,
+    //         )
+    //         .then((f) => f.users.at(0) ?? null)
+    //     : null;
 
-      const isFollowing = IS_DEBUG
-        ? true
-        : userData?.viewer_context?.followed_by ?? false;
-      const hasLiked = IS_DEBUG ? true : frameMessage?.likedCast;
-      const isActive = userData?.active_status === "active";
-      const isAllowListed = !!userData && FID_ALLOW_LIST.includes(userData.fid);
-      const isOG = !!userData && userData.fid <= FID_OG_LIMIT;
-      const isDegen = !!userData
-        ? await checkIsDegen(userData.verifications)
-        : false;
+    //   const isFollowing = IS_DEBUG
+    //     ? true
+    //     : userData?.viewer_context?.followed_by ?? false;
+    //   const hasLiked = IS_DEBUG ? true : frameMessage?.likedCast;
+    //   const isActive = userData?.active_status === "active";
+    //   const isAllowListed = !!userData && FID_ALLOW_LIST.includes(userData.fid);
+    //   const isOG = !!userData && userData.fid <= FID_OG_LIMIT;
+    //   const isDegen = !!userData
+    //     ? await checkIsDegen(userData.verifications)
+    //     : false;
 
-      if (!isFollowing /* || !hasLiked*/) {
-        return (
-          <FrameContainer
-            postUrl="/frames"
-            state={state}
-            previousFrame={previousFrame}
-            pathname="/"
-          >
-            <FrameImage src={`${HOST}/frames/follow.png`} />
-            <FrameButton action="post">Try again</FrameButton>
-            <FrameButton
-              action="link"
-              target={`https://warpcast.com/${FOLLOW_ACCOUNT_USERNAME}`}
-            >
-              {`Follow @${FOLLOW_ACCOUNT_USERNAME}`}
-            </FrameButton>
-          </FrameContainer>
-        );
-      }
+    //   if (!isFollowing /* || !hasLiked*/) {
+    //     return (
+    //       <FrameContainer
+    //         postUrl="/frames"
+    //         state={state}
+    //         previousFrame={previousFrame}
+    //         pathname="/"
+    //       >
+    //         <FrameImage src={`${HOST}/frames/follow.png`} />
+    //         <FrameButton action="post">Try again</FrameButton>
+    //         <FrameButton
+    //           action="link"
+    //           target={`https://warpcast.com/${FOLLOW_ACCOUNT_USERNAME}`}
+    //         >
+    //           {`Follow @${FOLLOW_ACCOUNT_USERNAME}`}
+    //         </FrameButton>
+    //       </FrameContainer>
+    //     );
+    //   }
 
-      if (!isActive && !isDegen && !isAllowListed && !isOG) {
-        console.info("NO ALLOWANCE", {
-          fid: userData?.fid,
-          username: userData?.username,
-        });
-        return (
-          <FrameContainer
-            postUrl="/frames"
-            state={state}
-            previousFrame={previousFrame}
-            pathname="/"
-          >
-            <FrameImage src={`${HOST}/frames/no-allowance.png`} />
-            <FrameButton>Try again</FrameButton>
-            <FrameButton
-              action="link"
-              target="https://warpcast.com/~/channel/lotto"
-            >
-              Visit /lotto for news
-            </FrameButton>
-          </FrameContainer>
-        );
-      }
+    //   if (!isActive && !isDegen && !isAllowListed && !isOG) {
+    //     console.info("NO ALLOWANCE", {
+    //       fid: userData?.fid,
+    //       username: userData?.username,
+    //     });
+    //     return (
+    //       <FrameContainer
+    //         postUrl="/frames"
+    //         state={state}
+    //         previousFrame={previousFrame}
+    //         pathname="/"
+    //       >
+    //         <FrameImage src={`${HOST}/frames/no-allowance.png`} />
+    //         <FrameButton>Try again</FrameButton>
+    //         <FrameButton
+    //           action="link"
+    //           target="https://warpcast.com/~/channel/lotto"
+    //         >
+    //           Visit /lotto for news
+    //         </FrameButton>
+    //       </FrameContainer>
+    //     );
+    //   }
 
-      return (
-        <FrameContainer
-          postUrl="/frames"
-          state={state}
-          previousFrame={previousFrame}
-          pathname="/"
-        >
-          {state.stage === Stage.SELECTING_NUMBERS_INVALID ? (
-            <FrameImage src={`${HOST}/frames/numbers_invalid.png`} />
-          ) : (
-            <FrameImage src={`${HOST}/frames/pick.png`} />
-          )}
-          <FrameInput text="Your numbers like 1 2 7 19 25" />
-          <FrameButton>Submit your numbers 🍀</FrameButton>
-          <FrameButton>Pick random 🔮</FrameButton>
-        </FrameContainer>
-      );
-    }
+    //   return (
+    //     <FrameContainer
+    //       postUrl="/frames"
+    //       state={state}
+    //       previousFrame={previousFrame}
+    //       pathname="/"
+    //     >
+    //       {state.stage === Stage.SELECTING_NUMBERS_INVALID ? (
+    //         <FrameImage src={`${HOST}/frames/numbers_invalid.png`} />
+    //       ) : (
+    //         <FrameImage src={`${HOST}/frames/pick.png`} />
+    //       )}
+    //       <FrameInput text="Your numbers like 1 2 7 19 25" />
+    //       <FrameButton>Submit your numbers 🍀</FrameButton>
+    //       <FrameButton>Pick random 🔮</FrameButton>
+    //     </FrameContainer>
+    //   );
+    // }
 
-    if (state.stage === Stage.CONFIRMING_NUMBERS) {
-      return (
-        <FrameContainer
-          postUrl="/frames"
-          state={state}
-          previousFrame={previousFrame}
-          pathname="/"
-        >
-          <FrameImage options={frameImageOptions}>
-            <div tw="w-full h-full bg-white text-[#2151f5] flex flex-col items-center justify-center font-mono text-7xl leading-[2] text-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={`${HOST}/frames/numbers.png`}
-                alt=""
-                tw="absolute top-0 left-0 w-full"
-              />
-              <div tw="absolute w-full bottom-[17%] flex text-[40px] left-[1.2%]">
-                {state.numbers?.map((num) => (
-                  <div
-                    tw="flex flex-shrink-0 0 items-center justify-center w-[13%] rounded-full mx-[3.105%] text-center"
-                    key={num}
-                  >
-                    {num}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </FrameImage>
-          <FrameButton>Claim ticket ✅</FrameButton>
-          <FrameButton>Pick new numbers 🔄</FrameButton>
-        </FrameContainer>
-      );
-    }
+    // if (state.stage === Stage.CONFIRMING_NUMBERS) {
+    //   return (
+    //     <FrameContainer
+    //       postUrl="/frames"
+    //       state={state}
+    //       previousFrame={previousFrame}
+    //       pathname="/"
+    //     >
+    //       <FrameImage options={frameImageOptions}>
+    //         <div tw="w-full h-full bg-white text-[#2151f5] flex flex-col items-center justify-center font-mono text-7xl leading-[2] text-center">
+    //           {/* eslint-disable-next-line @next/next/no-img-element */}
+    //           <img
+    //             src={`${HOST}/frames/numbers.png`}
+    //             alt=""
+    //             tw="absolute top-0 left-0 w-full"
+    //           />
+    //           <div tw="absolute w-full bottom-[17%] flex text-[40px] left-[1.2%]">
+    //             {state.numbers?.map((num) => (
+    //               <div
+    //                 tw="flex flex-shrink-0 0 items-center justify-center w-[13%] rounded-full mx-[3.105%] text-center"
+    //                 key={num}
+    //               >
+    //                 {num}
+    //               </div>
+    //             ))}
+    //           </div>
+    //         </div>
+    //       </FrameImage>
+    //       <FrameButton>Claim ticket ✅</FrameButton>
+    //       <FrameButton>Pick new numbers 🔄</FrameButton>
+    //     </FrameContainer>
+    //   );
+    // }
 
-    return (
-      <FrameContainer
-        postUrl="/frames"
-        state={state}
-        previousFrame={previousFrame}
-        pathname="/"
-      >
-        <FrameImage
-          src={`${HOST}/frames/initial.gif?c=${FOLLOW_ACCOUNT_USERNAME}`}
-        />
-        <FrameButton>🔵 🎰 🌟 Claim free ticket 🌟 🎰 🔵</FrameButton>
-      </FrameContainer>
-    );
+    // return (
+    //   <FrameContainer
+    //     postUrl="/frames"
+    //     state={state}
+    //     previousFrame={previousFrame}
+    //     pathname="/"
+    //   >
+    //     <FrameImage
+    //       src={`${HOST}/frames/initial.gif?c=${FOLLOW_ACCOUNT_USERNAME}`}
+    //     />
+    //     <FrameButton>🔵 🎰 🌟 Claim free ticket 🌟 🎰 🔵</FrameButton>
+    //   </FrameContainer>
+    // );
   } catch (e) {
     e instanceof Error && console.error(e.message);
     return (
