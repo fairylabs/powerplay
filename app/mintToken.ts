@@ -69,8 +69,8 @@ export async function mintToken(address: Address, numbers: number[]) {
     bundlerTransport: pimlicoTransport,
     middleware: {
       gasPrice: async () =>
-        (await bundlerClient.getUserOperationGasPrice()).fast, // use pimlico bundler to get gas prices
-      sponsorUserOperation: paymasterClient.sponsorUserOperation, // optional
+        (await bundlerClient.getUserOperationGasPrice()).fast,
+      sponsorUserOperation: paymasterClient.sponsorUserOperation,
     },
   });
 
@@ -93,7 +93,7 @@ export async function mintToken(address: Address, numbers: number[]) {
           : []),
       ],
     ],
-    account: signer,
+    account: safeAccount,
     maxFeePerGas: gasPrices.fast.maxFeePerGas,
     maxPriorityFeePerGas: gasPrices.fast.maxPriorityFeePerGas,
   });
