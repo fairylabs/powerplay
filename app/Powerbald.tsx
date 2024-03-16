@@ -42,23 +42,6 @@ export function Powerbald() {
   const { isConnected } = useAccount();
 
   return (
-    <div className="flex flex-col text-white bg-[#2151f5] font-mono pt-8 min-h-[100dvh]">
-      <div className="bg-white py-4 px-8 mx-auto w-fit mb-6">
-        <Image
-          src="/logo.png"
-          width={400}
-          height={111}
-          alt=""
-          className="object-contain mx-auto"
-        />
-      </div>
-      <h1 className="text-xl md:text-5xl text-center font-bold uppercase">
-        Powerbald is under Maintenance <br /> Please check back later.
-      </h1>
-    </div>
-  );
-
-  return (
     <>
       {useFilter && (
         <svg width="0" height="0">
@@ -242,9 +225,9 @@ function Jackpot({ gameId }: { gameId: bigint | undefined }) {
       <div>
         <div>YOUR CHANCE TO WIN</div>
         <div>
-          {parseInt(
-            formatEther(gameData?.[0] ?? 3000000n * BigInt(1e18)),
-          ).toLocaleString("en-US")}{" "}
+          {gameData
+            ? parseInt(formatEther(gameData[0])).toLocaleString("en-US")
+            : "…"}{" "}
           $DEGEN
         </div>
       </div>
@@ -256,20 +239,6 @@ function Jackpot({ gameId }: { gameId: bigint | undefined }) {
           className="underline hover:no-underline"
         >
           @{FOLLOW_ACCOUNT_USERNAME}
-        </Link>
-        ,{" "}
-        <Link
-          href={`https://warpcast.com/gmoney.eth`}
-          className="underline hover:no-underline"
-        >
-          @gmoney.eth
-        </Link>{" "}
-        and{" "}
-        <Link
-          href={`https://warpcast.com/wake`}
-          className="underline hover:no-underline"
-        >
-          @wake
         </Link>
         !
       </div>
