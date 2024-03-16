@@ -31,6 +31,7 @@ import {
   walletClient,
 } from "./config";
 import { getRandomPicks } from "./utils/random";
+import { mintToken } from "./mintToken";
 
 export async function SuccessStage({
   gameId,
@@ -122,62 +123,4 @@ export async function SuccessStage({
       </FrameButton>
     </FrameContainer>
   );
-}
-
-async function mintToken(address: Address, numbers: number[]) {
-  const bonusPicks1 = Array.from(getRandomPicks(PICK_AMOUNT, MAXIMUM_NUMBER));
-  const bonusPicks2 = Array.from(getRandomPicks(PICK_AMOUNT, MAXIMUM_NUMBER));
-
-  const gameId = await publicClient.readContract({
-    abi: LOOTERY_ABI,
-    address: CONTRACT_ADDRESS,
-    functionName: "currentGameId",
-  });
-
-  const isBonusRound = gameId === BONUS_ROUND;
-
-  // Try minting a new token
-  const { request } = await publicClient.simulateContract({
-    address: CONTRACT_ADDRESS,
-    abi: LOOTERY_ABI,
-    functionName: "ownerPick",
-    args: [
-      [
-        { whomst: address, picks: numbers },
-        ...(isBonusRound
-          ? [
-              // Triple wednesday!
-              { whomst: address, picks: bonusPicks1 },
-              { whomst: address, picks: bonusPicks2 },
-            ]
-          : []),
-      ],
-    ],
-    account: privateKeyToAccount(MINTER_PRIVATE_KEY),
-  });
-
-  if (!request) {
-    throw new Error("Could not simulate contract");
-  }
-
-  try {
-    if (IS_DEBUG) {
-      throw new Error("DEBUGGING", { cause: request });
-      return null;
-    }
-
-    const hash = await walletClient.writeContract(request);
-    return hash;
-  } catch (error) {
-    if (
-      error instanceof TransactionExecutionError &&
-      error.details.startsWith("gas required exceeds allowance")
-    ) {
-      console.error("Gas required exceeds allowance");
-    } else {
-      console.error(error);
-    }
-  }
-
-  return null;
 }
