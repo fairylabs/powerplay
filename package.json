@@ -18,7 +18,7 @@
     "@vercel/kv": "^1.0.1",
     "@web3modal/wagmi": "^4.0.10",
     "date-fns": "^3.3.1",
-    "frames.js": "^0.5.3",
+    "frames.js": "^0.8.3",
     "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",
     "next": "14.1.0",
@@ -33,7 +33,8 @@
     "wagmi": "^2.5.7"
   },
   "devDependencies": {
-    "@farcaster/core": "^0.14.3",
+    "@farcaster/core": "^0.14.7",
+    "@frames.js/debugger": "^0.1.5",
     "@types/node": "^20.11.20",
     "@types/react": "^18.2.59",
     "@types/react-dom": "^18",

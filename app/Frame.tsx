@@ -29,7 +29,6 @@ import {
   PICK_AMOUNT,
   publicClient,
 } from "./config";
-import { DEBUG_HUB_OPTIONS } from "./debug/constants";
 import { getRandomPicks } from "./utils/random";
 
 export const IS_DEBUG = process.env.ENABLE_DEBUG === "true";
@@ -211,7 +210,9 @@ export async function Frame({
             },
           },
         }
-      : DEBUG_HUB_OPTIONS),
+      : {
+          hubHttpUrl: "http://localhost:3010/hub",
+        }),
   });
 
   if (frameMessage && !frameMessage?.isValid) {
