@@ -9,7 +9,7 @@ import {
 import { base } from "viem/chains";
 
 export const PICK_AMOUNT = 5;
-export const MAXIMUM_NUMBER = 25;
+export const MAXIMUM_NUMBER = 18;
 
 export const FOLLOW_ACCOUNT_FID = 233254;
 export const FOLLOW_ACCOUNT_USERNAME = "lottopgf";

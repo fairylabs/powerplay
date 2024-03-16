@@ -66,7 +66,7 @@ export function getStorageKey(gameId: number, fid: number) {
     return `powerbald-testnet:${gameId}:${fid}`;
   }
 
-  return `powerbald:${gameId}:${fid}`;
+  return `powerbald-v15:${gameId}:${fid}`;
 }
 
 function sanitizePicks(raw: string) {
