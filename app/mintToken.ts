@@ -1,16 +1,13 @@
-import { type Address, TransactionExecutionError } from "viem";
-import { privateKeyToAccount } from "viem/accounts";
-import { IS_DEBUG } from "./Frame";
+import { TransactionExecutionError, type Address } from "viem";
 import { LOOTERY_ABI } from "./abi/Lootery";
 import {
-  PICK_AMOUNT,
-  MAXIMUM_NUMBER,
-  CONTRACT_ADDRESS,
   BONUS_ROUND,
+  CONTRACT_ADDRESS,
+  MAXIMUM_NUMBER,
   MINTER_PRIVATE_KEY,
-  walletClient,
-  publicClient,
+  PICK_AMOUNT,
   SAFE_ADDRESS,
+  publicClient,
 } from "./config";
 import { getRandomPicks } from "./utils/random";
 
@@ -18,23 +15,16 @@ import {
   ENTRYPOINT_ADDRESS_V06,
   createSmartAccountClient,
 } from "permissionless";
-import { signerToSafeSmartAccount } from "permissionless/accounts";
-import {
-  createPimlicoBundlerClient,
-  createPimlicoPaymasterClient,
-} from "permissionless/clients/pimlico";
-import { createPublicClient, getContract, http, parseEther } from "viem";
+import { privateKeyToSafeSmartAccount } from "permissionless/accounts";
+import { createPimlicoBundlerClient } from "permissionless/clients/pimlico";
+import { getContract, http } from "viem";
 
 import { base } from "viem/chains";
+import { IS_DEBUG } from "./Frame";
 
 const pimlicoTransport = http(
-  "https://api.pimlico.io/v2/8453/rpc?apikey=2f34f184-f94d-4857-b9b2-166a96dd8f5e",
+  "https://api.pimlico.io/v1/base/rpc?apikey=2f34f184-f94d-4857-b9b2-166a96dd8f5e",
 );
-
-const paymasterClient = createPimlicoPaymasterClient({
-  transport: pimlicoTransport,
-  entryPoint: ENTRYPOINT_ADDRESS_V06,
-});
 
 const bundlerClient = createPimlicoBundlerClient({
   transport: pimlicoTransport,
@@ -53,62 +43,61 @@ export async function mintToken(address: Address, numbers: number[]) {
 
   const isBonusRound = gameId === BONUS_ROUND;
 
-  const signer = privateKeyToAccount(MINTER_PRIVATE_KEY);
-
-  const safeAccount = await signerToSafeSmartAccount(publicClient, {
+  const account = await privateKeyToSafeSmartAccount(publicClient, {
     entryPoint: ENTRYPOINT_ADDRESS_V06,
-    signer,
+    privateKey: MINTER_PRIVATE_KEY,
     safeVersion: "1.4.1",
     address: SAFE_ADDRESS,
   });
 
   const smartAccountClient = createSmartAccountClient({
-    account: safeAccount,
+    account,
     entryPoint: ENTRYPOINT_ADDRESS_V06,
     chain: base,
     bundlerTransport: pimlicoTransport,
     middleware: {
       gasPrice: async () =>
         (await bundlerClient.getUserOperationGasPrice()).fast,
-      sponsorUserOperation: paymasterClient.sponsorUserOperation,
     },
   });
 
   const gasPrices = await bundlerClient.getUserOperationGasPrice();
 
-  // Try minting a new token
-  const { request } = await publicClient.simulateContract({
+  const lootery = getContract({
     address: CONTRACT_ADDRESS,
     abi: LOOTERY_ABI,
-    functionName: "ownerPick",
-    args: [
-      [
-        { whomst: address, picks: numbers },
-        ...(isBonusRound
-          ? [
-              // Triple wednesday!
-              { whomst: address, picks: bonusPicks1 },
-              { whomst: address, picks: bonusPicks2 },
-            ]
-          : []),
-      ],
-    ],
-    account: safeAccount,
-    maxFeePerGas: gasPrices.fast.maxFeePerGas,
-    maxPriorityFeePerGas: gasPrices.fast.maxPriorityFeePerGas,
+    client: {
+      public: publicClient,
+      wallet: smartAccountClient,
+    },
   });
-
-  if (!request) {
-    throw new Error("Could not simulate contract");
-  }
 
   try {
     if (IS_DEBUG) {
-      throw new Error("DEBUGGING", { cause: request });
+      throw new Error("DEBUGGING");
       return null;
     }
 
-    const hash = await smartAccountClient.writeContract(request);
+    const hash = await lootery.write.ownerPick(
+      [
+        [
+          { whomst: address, picks: numbers },
+          ...(isBonusRound
+            ? [
+                // Triple wednesday!
+                { whomst: address, picks: bonusPicks1 },
+                { whomst: address, picks: bonusPicks2 },
+              ]
+            : []),
+        ],
+      ],
+      {
+        account,
+        maxFeePerGas: gasPrices.fast.maxFeePerGas,
+        maxPriorityFeePerGas: gasPrices.fast.maxPriorityFeePerGas,
+      },
+    );
+
     return hash;
   } catch (error) {
     if (

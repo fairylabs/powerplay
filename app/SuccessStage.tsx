@@ -9,28 +9,16 @@ import {
   type PreviousFrame,
 } from "frames.js/next/server";
 import type { SatoriOptions } from "satori";
-import { TransactionExecutionError, getAddress, type Address } from "viem";
-import { privateKeyToAccount } from "viem/accounts";
+import { getAddress } from "viem";
 import {
   HOST,
+  IS_DEBUG,
   Stage,
   State,
   getStorageKey,
   type MintData,
-  IS_DEBUG,
 } from "./Frame";
-import { LOOTERY_ABI } from "./abi/Lootery";
-import {
-  BONUS_ROUND,
-  CHAIN,
-  CONTRACT_ADDRESS,
-  MAXIMUM_NUMBER,
-  MINTER_PRIVATE_KEY,
-  PICK_AMOUNT,
-  publicClient,
-  walletClient,
-} from "./config";
-import { getRandomPicks } from "./utils/random";
+import { CHAIN, PICK_AMOUNT } from "./config";
 import { mintToken } from "./mintToken";
 
 export async function SuccessStage({
